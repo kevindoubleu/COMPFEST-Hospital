@@ -9,9 +9,13 @@ import (
 var tpl *template.Template
 func init() {
 	log.Println("initializing templates")
+
 	tpl =  template.New("")
 	tpl.ParseGlob("templates/components/*.gohtml")
+	tpl.ParseGlob("templates/sections/*.gohtml")
+	tpl.ParseGlob("templates/pages/*.gohtml")
 	tpl.ParseGlob("templates/layouts/*.gohtml")
+
 	log.Println("parsed templates", tpl.DefinedTemplates())
 }
 
