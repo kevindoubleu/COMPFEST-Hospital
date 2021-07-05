@@ -14,3 +14,8 @@ type Appointment struct {
 	MaxRegistrant int
 	Registrants []*Patient
 }
+
+type TemplateSessionData struct {
+	isLoggedIn bool
+	Username string
+}

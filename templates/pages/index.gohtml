@@ -11,17 +11,21 @@
 
     {{template "header"}}
 
-    {{template "hero"}}
+    {{if .TemplateSessionData.isLoggedIn}}
+        {{template "hero"}}
 
-    {{template "whyus"}}
+        {{template "whyus"}}
+    {{else}}
+        {{template "breadcrumbs" "Appointments"}}
+        
+        {{template "faq"}}
+    {{end}}
 
     <main id="main">
 
-    {{template "services"}}
+    {{template "gallery"}}
 
     {{template "departments"}}
-
-    {{template "gallery"}}
 
     </main>
 
