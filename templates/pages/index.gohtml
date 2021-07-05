@@ -12,13 +12,13 @@
     {{template "header"}}
 
     {{if .TemplateSessionData.isLoggedIn}}
-        {{template "hero"}}
-
-        {{template "whyus"}}
-    {{else}}
         {{template "breadcrumbs" "Appointments"}}
         
         {{template "faq"}}
+    {{else}}
+        {{template "hero"}}
+
+        {{template "whyus"}}
     {{end}}
 
     <main id="main">
