@@ -22,9 +22,10 @@ func init() {
 func main() {
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
 
-	http.HandleFunc("/", homepage)
 	http.HandleFunc("/test", test)
 
+	http.HandleFunc("/", homepage)
+	http.HandleFunc("/register", register)
 	
 	log.Printf("starting server")
 	log.Fatal(http.ListenAndServe(":8080", nil))
@@ -36,4 +37,8 @@ func homepage(w http.ResponseWriter, r *http.Request) {
 
 func test(w http.ResponseWriter, r *http.Request) {
 	tpl.ExecuteTemplate(w, "inner-page.gohtml", nil)
+}
+
+func register(w http.ResponseWriter, r *http.Request) {
+	tpl.ExecuteTemplate(w, "register.gohtml", nil)
 }
