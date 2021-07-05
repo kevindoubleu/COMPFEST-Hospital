@@ -9,11 +9,8 @@ type Patient struct {
 	Password []byte
 }
 
-type Doctor struct {
-	Name string
-}
-
 type Appointment struct {
-	Doctor Doctor
-	Patients [3]*Patient
+	Doctor string
+	MaxRegistrant int
+	Registrants []*Patient
 }
