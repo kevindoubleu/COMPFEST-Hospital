@@ -14,7 +14,7 @@ notes:
 
 ### Sketch
 
-![](sketch/sitemap.png)
+![](sketch/sketch.png)
 
 #### requirements
 
