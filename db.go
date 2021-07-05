@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -10,18 +11,33 @@ import (
 // use in memory db for now
 
 // ===== SESSIONS =====
-// key is uuid
-// val is Patient.Username
-var dbSessions map[string]string
+// Sid is uuid in user's cookie
+// Username is Patient.Username of session owner
+// LastModified is like for serverside cookie maxage
+type Session struct {
+	Sid string
+	Username string
+	LastModified time.Time
+}
+var dbSessions map[string]Session
 
 // ===== USERS =====
 // key is Patient.Username
+// val is Patient data
+type Patient struct {
+	fName string
+	lName string
+	Age int
+	Email string
+	Username string
+	Password []byte
+}
 var dbUsers map[string]Patient
 
 func init() {
 	log.Println("initializing database")
 
-	dbSessions = make(map[string]string)
+	dbSessions = make(map[string]Session)
 	dbUsers = make(map[string]Patient)
 
 	log.Println("creating admin superuser")

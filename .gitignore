@@ -4,6 +4,7 @@
 *.dll
 *.so
 *.dylib
+compfest-hospital
 
 # Test binary, built with `go test -c`
 *.test

@@ -8,13 +8,14 @@
 
         <nav id="navbar" class="navbar order-last order-lg-0">
         <ul>
-            <li><a class="nav-link scrollto active" href="/">Home</a></li>
-            {{if .TemplateSessionData.isLoggedIn}}
-                {{if eq .TemplateSessionData.Username "admin"}}
-                    <li><a class="nav-link scrollto active" href="/admin">Administration</a></li>
+            <li><a class="nav-link scrollto" href="/">Home</a></li>
+            {{if .TemplateSessionData.IsLoggedIn}}
+                {{if eq .TemplateSessionData.Username "\"admin\""}}
+                    <li><a class="nav-link scrollto" href="/admin">Administration</a></li>
                 {{else}}
-                    <li><a class="nav-link scrollto active" href="/user/{{.TemplateSessionData.Username}}">Profile</a></li>
+                    <li><a class="nav-link scrollto" href="/user/{{.TemplateSessionData.Username}}">Profile</a></li>
                 {{end}}
+                <li><a class="nav-link scrollto" href="/logout">Logout</a></li>
             {{else}}
                 <li><a class="nav-link scrollto" href="/register">Register</a></li>
                 <li><a class="nav-link scrollto" href="/login">Login</a></li>
@@ -47,9 +48,18 @@
         </nav>
         <!-- .navbar -->
 
-        <a href="/#appointment" class="appointment-btn scrollto"
-        ><span class="d-none d-md-inline">Make an</span> Appointment</a
-        >
+        {{if .TemplateSessionData.Username}}
+            <a href="/#appointment" class="appointment-btn scrollto">
+                <span class="d-none d-md-inline">
+                    {{.TemplateSessionData.Username}}, Make an
+                </span>
+                Appointment
+            </a>
+        {{else}}
+            <a href="/#appointment" class="appointment-btn scrollto">
+                <span class="d-none d-md-inline">Make an</span> Appointment
+            </a>
+        {{end}}
     </div>
 </header>
 <!-- End Header -->

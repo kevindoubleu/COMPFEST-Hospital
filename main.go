@@ -32,13 +32,23 @@ func main() {
 }
 
 func homepage(w http.ResponseWriter, r *http.Request) {
-	tpl.ExecuteTemplate(w, "index.gohtml", nil)
+	if isLoggedIn(w, r) {
+		c, _ := r.Cookie(scName)
+		data := struct{
+			TemplateSessionData TemplateSessionData
+		}{
+			TemplateSessionData{
+				IsLoggedIn: true,
+				Username: dbSessions[c.Value].Username,
+			},
+		}
+
+		tpl.ExecuteTemplate(w, "index.gohtml", data)
+	} else {
+		tpl.ExecuteTemplate(w, "index.gohtml", nil)
+	}
 }
 
 func test(w http.ResponseWriter, r *http.Request) {
 	tpl.ExecuteTemplate(w, "inner-page.gohtml", nil)
-}
-
-func register(w http.ResponseWriter, r *http.Request) {
-	tpl.ExecuteTemplate(w, "register.gohtml", nil)
 }

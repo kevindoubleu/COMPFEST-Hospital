@@ -9,9 +9,9 @@
 
     {{template "topbar"}}
 
-    {{template "header"}}
+    {{template "header" .}}
 
-    {{if .TemplateSessionData.isLoggedIn}}
+    {{if .TemplateSessionData.IsLoggedIn}}
         {{template "breadcrumbs" "Appointments"}}
         
         {{template "faq"}}
