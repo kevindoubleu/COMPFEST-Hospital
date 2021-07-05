@@ -25,9 +25,10 @@ notes:
   - [ ] admin
     - [ ] default superuser acc
   - [ ] patient
-    - [ ] /register
+    - [x] /register
     - [ ] /login
     - [ ] /user/username
+    - [ ] /logout
 
 - [ ] admin funcs
   - [ ] doctor appointment
@@ -48,4 +49,6 @@ july 5
 - start proj
 - sketch sitemap / functionalities
 - object definitions
-- frontend template
+- in memory db
+- frontend
+- login
