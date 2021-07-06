@@ -1,46 +1,99 @@
 package main
 
 import (
+	"database/sql"
+	"fmt"
 	"log"
 
-	"golang.org/x/crypto/bcrypt"
+	_ "github.com/lib/pq"
 )
 
-// not using an actual db yet
-// use in memory db for now
-
-// ===== USERS =====
-// key is Patient.Username
-// val is Patient data
-type Patient struct {
-	fName string
-	lName string
-	Age int
-	Email string
-	Username string
-	Password []byte
+type Appointment struct {
+	Id int
+	Doctor string
+	Description string
+	Capacity int
 }
-var dbUsers map[string]Patient
 
 func init() {
 	log.Println("initializing database")
 
-	// dbSessions = make(map[string]Session)
-	dbUsers = make(map[string]Patient)
+	connStr := `
+		user=compfestadmin
+		password=compfestadmin
+		dbname=hospital
+		host=127.0.0.1`
+	// db url and user will be provided in an env var in heroku
 
-	log.Println("creating admin superuser")
-	adminHash, _ := bcrypt.GenerateFromPassword(
-		[]byte("compfesthospitaladmin"),
-		bcrypt.DefaultCost)
-	dbUsers["admin"] = Patient{
-		fName: "admin",
-		lName: "istrator",
-		Age: 0,
-		Email: "admin@compfest.local",
-		Username: "admin",
-		Password: adminHash,
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Panic(err)
 	}
-	log.Println("created admin superuser, admin:compfesthospitaladmin")
+	defer db.Close()
 
-	log.Println("initialized database")
+	err = db.Ping()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("successfully connected to db")
+
+	// init the actual db
+	_, err = db.Exec(`DROP TABLE IF EXISTS appointments CASCADE`)
+	ErrPanic(err)
+	_, err = db.Exec(`
+		CREATE TABLE appointments(
+			id          SERIAL PRIMARY KEY,
+			doctor      TEXT   NOT NULL,
+			description TEXT   NOT NULL,
+			capacity    INT    NOT NULL
+		)
+	`)
+	ErrPanic(err)
+	_, err = db.Exec(`DROP TABLE IF EXISTS patients`)
+	ErrPanic(err)
+	_, err = db.Exec(`
+		CREATE TABLE patients(
+			id             SERIAL PRIMARY KEY,
+			firstname      TEXT   NOT NULL,
+			lastname       TEXT   NOT NULL,
+			email          TEXT   NOT NULL,
+			age            INT    NOT NULL,
+			username       TEXT   NOT NULL,
+			password       TEXT   NOT NULL,
+			appointment_id INT    references appointments(id)
+		)
+	`)
+	ErrPanic(err)
+
+	// insert dummy values
+	_, err = db.Exec(`
+		INSERT INTO appointments (doctor, description, capacity)
+		VALUES
+			('Dr. Some Guy', 'I will talk about some covid stuff', 3),
+			('Dr. Pepper', 'some more covid stuff', 4),
+			('Mr. Strange', 'hey im a doctor yknow', 5)
+	`)
+	ErrPanic(err)
+
+	// read
+	rows, err := db.Query("SELECT * FROM appointments;")
+	ErrPanic(err)
+	defer rows.Close()
+
+	availableAppointments := make([]Appointment, 0)
+	for rows.Next() {
+		a := Appointment{}
+		err := rows.Scan(&a.Id, &a.Doctor, &a.Description, &a.Capacity)
+		ErrPanic(err)
+		availableAppointments = append(availableAppointments, a)
+	}
+
+	// check for errors on retrieving rows
+	ErrPanic(rows.Err())
+
+	for _, v := range availableAppointments {
+		log.Println(v)
+	}
+
+	fmt.Println("initialized database")
 }

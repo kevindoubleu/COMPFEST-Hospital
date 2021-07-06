@@ -14,7 +14,13 @@ notes:
 
 ### Sketch
 
+Sitemap / functionalities / features
+
 ![](sketch/sketch.png)
+
+DB
+
+![](sketch/db.png)
 
 #### Requirements
 
@@ -22,8 +28,8 @@ notes:
   - [x] jwt
 
 - [ ] acc roles
-  - [x] admin
-    - [x] default superuser acc
+  - [ ] admin
+    - [ ] default superuser acc
   - [ ] patient
     - [x] /register
     - [x] /login
@@ -57,7 +63,12 @@ july 6
 - logout
 - login
 - jwt
+- postgres db
 
 ###### References
 
 [Implementing JWT based authentication in Golang](https://www.sohamkamani.com/golang/jwt-authentication/)
+
+###### To fix
+
+- more specific text field types in "patients" table
