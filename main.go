@@ -26,6 +26,7 @@ func main() {
 
 	http.HandleFunc("/", homepage)
 	http.HandleFunc("/register", register)
+	http.HandleFunc("/logout", logout)
 	
 	log.Printf("starting server")
 	log.Fatal(http.ListenAndServe(":8080", nil))

@@ -51,4 +51,7 @@ july 5
 - object definitions
 - in memory db
 - frontend
-- login
+- register
+
+july 6
+- logout
