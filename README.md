@@ -10,25 +10,25 @@ notes:
 
 ## Frontend
 
-[Medilab Bootstrap 5 template from BootstrapMade](https://bootstrapmade.com/medilab-free-medical-bootstrap-theme/download/)
+[Medilab Bootstrap 5 template from BootstrapMade](https://bootstrapmade.com/medilab-free-medical-bootstrap-theme/download/), modified to meet requirements
 
 ### Sketch
 
 ![](sketch/sketch.png)
 
-#### requirements
+#### Requirements
 
 - [ ] authentication
-  - [ ] jwt
+  - [x] jwt
 
 - [ ] acc roles
-  - [ ] admin
-    - [ ] default superuser acc
+  - [x] admin
+    - [x] default superuser acc
   - [ ] patient
     - [x] /register
-    - [ ] /login
+    - [x] /login
     - [ ] /user/username
-    - [ ] /logout
+    - [x] /logout
 
 - [ ] admin funcs
   - [ ] doctor appointment
@@ -56,3 +56,8 @@ july 5
 july 6
 - logout
 - login
+- jwt
+
+###### References
+
+[Implementing JWT based authentication in Golang](https://www.sohamkamani.com/golang/jwt-authentication/)

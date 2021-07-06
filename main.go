@@ -10,13 +10,13 @@ var tpl *template.Template
 func init() {
 	log.Println("initializing templates")
 
-	tpl =  template.New("")
+	tpl = template.New("")
 	tpl.ParseGlob("templates/components/*.gohtml")
 	tpl.ParseGlob("templates/sections/*.gohtml")
 	tpl.ParseGlob("templates/pages/*.gohtml")
 	tpl.ParseGlob("templates/layouts/*.gohtml")
 
-	log.Println("parsed templates", tpl.DefinedTemplates())
+	log.Println("initialized templates")
 }
 
 func main() {
@@ -36,23 +36,25 @@ func main() {
 }
 
 func homepage(w http.ResponseWriter, r *http.Request) {
-	if isLoggedIn(w, r) {
-		data := struct{
-			TemplateSessionData TemplateSessionData
-		}{
-			createTemplateSessionData(r),
-		}
-		tpl.ExecuteTemplate(w, "index.gohtml", data)
-	} else {
-		tpl.ExecuteTemplate(w, "index.gohtml", nil)
+	if isLoggedIn(r) {
+		refreshSession(w, r)
 	}
+
+	data := struct{
+		TemplateSessionData TemplateSessionData
+	}{
+		createTemplateSessionData(r),
+	}
+	tpl.ExecuteTemplate(w, "index.gohtml", data)
 }
 
 func appointments(w http.ResponseWriter, r *http.Request) {
-	if !isLoggedIn(w, r) {
+	if !isLoggedIn(r) {
 		http.Redirect(w, r, "/?msg="+ErrMsgNoSession, http.StatusSeeOther)
 		return
 	}
+
+	refreshSession(w, r)
 
 	data := struct{
 		TemplateSessionData TemplateSessionData
@@ -67,9 +69,13 @@ func test(w http.ResponseWriter, r *http.Request) {
 }
 
 func createTemplateSessionData(r *http.Request) TemplateSessionData {
-	c, _ := r.Cookie(scName)
-	return TemplateSessionData{
-			IsLoggedIn: true,
-			Username: dbSessions[c.Value].Username,
+	claims := getJwtClaims(r)
+	if claims == nil {
+		return TemplateSessionData{}
+	} else {
+		return TemplateSessionData{
+				IsLoggedIn: isLoggedIn(r),
+				Username: claims.Username,
+		}
 	}
 }

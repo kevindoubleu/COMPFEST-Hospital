@@ -3,7 +3,7 @@ package main
 import "net/http"
 
 func logout(w http.ResponseWriter, r *http.Request) {
-	if !isLoggedIn(w, r) {
+	if !isLoggedIn(r) {
 		http.Redirect(w, r, "/?msg="+ErrMsgNoSession, http.StatusSeeOther)
 		return
 	}
@@ -12,9 +12,7 @@ func logout(w http.ResponseWriter, r *http.Request) {
 	c, _ := r.Cookie(scName)
 	c.MaxAge = -1
 	http.SetCookie(w, c)
-
-	// delete entry in session db
-	delete(dbSessions, c.Value)
+	// SECURITY NOTICE: if cookie is not deleted, it can still be used to auth
 
 	// redirect back to homepage
 	http.Redirect(w, r, "/?msg="+MsgLoggedOut, http.StatusSeeOther)

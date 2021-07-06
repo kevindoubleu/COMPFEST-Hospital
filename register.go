@@ -11,7 +11,7 @@ import (
 func register(w http.ResponseWriter, r *http.Request) {
 	// GET -> give form
 	if r.Method == http.MethodGet {
-		if isLoggedIn(w, r) {
+		if isLoggedIn(r) {
 			http.Redirect(w, r, "/?msg="+ErrMsgHasSession, http.StatusSeeOther)
 			return
 		}
@@ -23,7 +23,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 	// POST -> process form
 	if r.Method == http.MethodPost {
 		// check session cookie if logged in
-		if isLoggedIn(w, r) {
+		if isLoggedIn(r) {
 			http.Redirect(w, r, "/?msg=Already logged in", http.StatusSeeOther)
 			return
 		}

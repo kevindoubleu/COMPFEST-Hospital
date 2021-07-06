@@ -7,7 +7,7 @@ import (
 )
 
 func login(w http.ResponseWriter, r *http.Request) {
-	if isLoggedIn(w, r) {
+	if isLoggedIn(r) {
 		http.Redirect(w, r, "/?msg="+ErrMsgHasSession, http.StatusSeeOther)
 		return
 	}
