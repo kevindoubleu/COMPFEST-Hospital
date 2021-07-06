@@ -12,7 +12,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 	// GET -> give form
 	if r.Method == http.MethodGet {
 		if isLoggedIn(w, r) {
-			http.Redirect(w, r, "/?msg="+MsgHasSession, http.StatusSeeOther)
+			http.Redirect(w, r, "/?msg="+ErrMsgHasSession, http.StatusSeeOther)
 			return
 		}
 

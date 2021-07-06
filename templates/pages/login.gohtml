@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{template "head" "Login"}}
+</head>
+
+<body>
+
+    {{template "topbar"}}
+
+    {{template "header"}}
+
+    <main id="main">
+    
+    {{template "breadcrumbs" "Login"}}
+    
+    <section id="appointment" class="appointment section-bg">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Login</h2>
+                <p>Welcome back our valued patient, please fill in the fields to login to your account.</p>
+            </div>
+
+            <form action="/login" method="post" role="form" class="medilab-form">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 form-group mt-3 mt-md-0">
+                        <input type="text" name="username" class="form-control" placeholder="Username" required>
+                    </div>
+                </div>
+                
+                <div class="row justify-content-center">
+                    <div class="col-md-8 form-group mt-3 mt-md-0">
+                        <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+                </div>
+
+                <div class="text-center"><button type="submit">Register</button></div>
+            </form>
+
+        </div>
+    </section>
+
+    </main>
+
+    {{template "footer"}}
+
+</body>
+
+</html>

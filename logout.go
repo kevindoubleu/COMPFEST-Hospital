@@ -4,7 +4,7 @@ import "net/http"
 
 func logout(w http.ResponseWriter, r *http.Request) {
 	if !isLoggedIn(w, r) {
-		http.Redirect(w, r, "/?msg="+MsgNoSession, http.StatusSeeOther)
+		http.Redirect(w, r, "/?msg="+ErrMsgNoSession, http.StatusSeeOther)
 		return
 	}
 
