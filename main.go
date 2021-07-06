@@ -4,6 +4,8 @@ import (
 	"log"
 	"net/http"
 	"text/template"
+
+	"github.com/urfave/negroni"
 )
 
 var tpl *template.Template
@@ -30,36 +32,36 @@ func main() {
 	http.HandleFunc("/logout", logout)
 
 	http.HandleFunc("/appointments", appointments)
+
+	n := negroni.Classic()
+	n.Use(negroni.NewLogger())
+	n.UseHandler(http.DefaultServeMux)
 	
 	log.Printf("starting server")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", n))
 }
 
 func homepage(w http.ResponseWriter, r *http.Request) {
-	if isLoggedIn(r) {
+	_, err := r.Cookie(scName)
+	if err != http.ErrNoCookie {
 		refreshSession(w, r)
 	}
 
 	data := struct{
 		TemplateSessionData TemplateSessionData
 	}{
-		createTemplateSessionData(r),
+		createTemplateSessionData(w, r),
 	}
 	tpl.ExecuteTemplate(w, "index.gohtml", data)
 }
 
 func appointments(w http.ResponseWriter, r *http.Request) {
-	if !isLoggedIn(r) {
-		http.Redirect(w, r, "/?msg="+ErrMsgNoSession, http.StatusSeeOther)
-		return
-	}
-
 	refreshSession(w, r)
 
 	data := struct{
 		TemplateSessionData TemplateSessionData
 	}{
-		createTemplateSessionData(r),
+		createTemplateSessionData(w, r),
 	}
 	tpl.ExecuteTemplate(w, "appointments.gohtml", data)
 }
@@ -68,13 +70,13 @@ func test(w http.ResponseWriter, r *http.Request) {
 	tpl.ExecuteTemplate(w, "inner-page.gohtml", nil)
 }
 
-func createTemplateSessionData(r *http.Request) TemplateSessionData {
-	claims := getJwtClaims(r)
+func createTemplateSessionData(w http.ResponseWriter, r *http.Request) TemplateSessionData {
+	claims := getJwtClaims(w, r)
 	if claims == nil {
 		return TemplateSessionData{}
 	} else {
 		return TemplateSessionData{
-				IsLoggedIn: isLoggedIn(r),
+				IsLoggedIn: isLoggedIn(w, r),
 				Username: claims.Username,
 		}
 	}

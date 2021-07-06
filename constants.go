@@ -8,6 +8,7 @@ import (
 
 var ErrMsgHasSession string
 var ErrMsgNoSession string
+var ErrMsgSessionTimeout string
 var ErrMsgLoginFail string
 
 var MsgRegistered string
@@ -28,6 +29,7 @@ func init() {
 	// messages and err messages for toasts
 	ErrMsgHasSession = "You are already logged in"
 	ErrMsgNoSession = "You are not logged in"
+	ErrMsgSessionTimeout = "Your session has expired, please login again"
 	ErrMsgLoginFail = "Incorrect username or password"
 
 	MsgRegistered = "You have registered successfully"
@@ -36,6 +38,7 @@ func init() {
 
 	// config
 	sessionDuration = 15 * time.Minute
+	sessionDuration = 30 * time.Second
 	// small session duration due to difficulty ininvalidating jwt
 
 	// secrets
