@@ -3,9 +3,9 @@ Hospital Information System - Software Engineering Academy COMPFEST Selection Ta
 
 ## Backend
 
-Go with standard library
+Go, PostgreSQL
 
-notes:
+note:
 - admin panel credentials are `admin:compfesthospitaladmin`
 
 ## Frontend
@@ -21,6 +21,18 @@ Sitemap / functionalities / features
 DB
 
 ![](sketch/db.png)
+
+### Notes for COMPFEST
+
+- Requirement “List of registrant” dalam “Doctor appointment” tidak spesifik terhadap data registrant apa saja yang ditampilkan, dianggap hanya data pribadi: first name, last name, age, email (di /administration).
+- Requirement “Patients can see a list of appointments” kurang spesifik mengenai data appointment apa yang dapat dilihat, dianggap data yang tidak menyangkut pasien lain: doctor name, appointment description, total registrant, total appointment capacity (di /appointments).
+- Requirement “fully booked registrant” tidak jelas spesifikasinya, dianggap setiap doctor appointment saat di create oleh admin akan ada maksimum registrant untuk masing-masing appointment (di /administration dan /appointments).
+
+### Planned
+
+- change "patients" table into "users" table with an additional "role" field
+  - this adds the abilty to manually add more admin role accounts
+- more specific text field types in "patients" table
 
 #### Requirements
 
@@ -64,12 +76,14 @@ july 6
 - logout
 - login
 - jwt
-- postgres db
+- sketch + implement postgres db
+- admin read
 
 ###### References
 
 [Implementing JWT based authentication in Golang](https://www.sohamkamani.com/golang/jwt-authentication/)
 
-###### To fix
+###### Footnotes
 
-- more specific text field types in "patients" table
+I genuinely really enjoy making this webapp, using minimal frameworks, with a new language I just learned, facing all it's challenges.
+I hope to learn more of this in the academy, I really want to be able to do more of this, and to make it my job, and learn even more in the field!
