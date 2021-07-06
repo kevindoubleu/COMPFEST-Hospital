@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    {{template "head"}}
+    {{template "head" "Administration"}}
 </head>
 
 <body>
@@ -11,20 +11,16 @@
 
     {{template "header" .TemplateSessionData}}
 
-    {{template "hero" .}}
-
-    {{template "whyus"}}
-
     <main id="main">
 
-    {{template "gallery"}}
+    {{template "breadcrumbs" "Administration"}}
 
-    {{template "departments"}}
+    {{template "admin" .AppointmentDetails}}
 
     </main>
 
     {{template "footer"}}
-    
+
 </body>
 
 </html>

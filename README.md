@@ -39,7 +39,8 @@ DB
 - [ ] admin funcs
   - [ ] doctor appointment
     - [ ] c
-    - [ ] r
+    - [x] r
+      - [x] r registrants per appointment
     - [ ] u
     - [ ] d
 

@@ -39,3 +39,15 @@ func refreshSession(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/login?msg="+ErrMsgSessionTimeout, http.StatusSeeOther)
 	}
 }
+
+func createTemplateSessionData(w http.ResponseWriter, r *http.Request) TemplateSessionData {
+	claims := getJwtClaims(w, r)
+	if claims == nil {
+		return TemplateSessionData{}
+	} else {
+		return TemplateSessionData{
+				IsLoggedIn: isLoggedIn(w, r),
+				Username: claims.Username,
+		}
+	}
+}

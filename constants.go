@@ -45,7 +45,7 @@ func init() {
 
 	// config
 	sessionDuration = 15 * time.Minute
-	sessionDuration = 30 * time.Second
+	// sessionDuration = 30 * time.Second // testing
 	// small session duration due to difficulty ininvalidating jwt
 
 	// secrets
