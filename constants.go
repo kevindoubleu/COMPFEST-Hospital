@@ -2,14 +2,18 @@ package main
 
 import (
 	"crypto/rand"
+	"database/sql"
 	"log"
 	"time"
 )
+
+var db *sql.DB
 
 var ErrMsgHasSession string
 var ErrMsgNoSession string
 var ErrMsgSessionTimeout string
 var ErrMsgLoginFail string
+var ErrMsgRegisterFail string
 
 var MsgRegistered string
 var MsgLoggedIn string
@@ -21,6 +25,8 @@ var secretJWT []byte
 var secretJWTsize int
 
 func init() {
+	db = initDB()
+
 	log.Println("initializing constants")
 
 	// session cookie name
@@ -31,6 +37,7 @@ func init() {
 	ErrMsgNoSession = "You are not logged in"
 	ErrMsgSessionTimeout = "Your session has expired, please login again"
 	ErrMsgLoginFail = "Incorrect username or password"
+	ErrMsgRegisterFail = "Sorry, that username is taken"
 
 	MsgRegistered = "You have registered successfully"
 	MsgLoggedIn = "You are logged in"

@@ -2,10 +2,10 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
 	_ "github.com/lib/pq"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type Appointment struct {
@@ -15,7 +15,18 @@ type Appointment struct {
 	Capacity int
 }
 
-func init() {
+type Patient struct {
+	Id int
+	Firstname string
+	Lastname string
+	Age int
+	Email string
+	Username string
+	Password string
+	Appointment_id int
+}
+
+func initDB() *sql.DB {
 	log.Println("initializing database")
 
 	connStr := `
@@ -29,7 +40,6 @@ func init() {
 	if err != nil {
 		log.Panic(err)
 	}
-	defer db.Close()
 
 	err = db.Ping()
 	if err != nil {
@@ -75,6 +85,17 @@ func init() {
 	`)
 	ErrPanic(err)
 
+	// reserve "admin" username
+	hash, _ := bcrypt.GenerateFromPassword(
+		[]byte("compfesthospitaladmin"),
+		bcrypt.DefaultCost)
+	_, err = db.Exec(`
+		INSERT INTO patients (firstname, lastname, age, email, username, password)
+		VALUES
+			('admin', 'istrator', 0, 'admin@compfest.local', 'admin', $1)`,
+		string(hash))
+	ErrPanic(err)
+
 	// read
 	rows, err := db.Query("SELECT * FROM appointments;")
 	ErrPanic(err)
@@ -95,5 +116,6 @@ func init() {
 		log.Println(v)
 	}
 
-	fmt.Println("initialized database")
+	log.Println("initialized database", db)
+	return db
 }

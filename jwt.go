@@ -18,7 +18,7 @@ func destroyJwtCookie(w http.ResponseWriter, r *http.Request) {
 	if err == http.ErrNoCookie {
 		return
 	}
-	c.MaxAge = 0
+	c.MaxAge = -1
 	http.SetCookie(w, c)
 }
 
