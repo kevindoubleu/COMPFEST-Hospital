@@ -4,7 +4,15 @@
     <div class="container">
         <h1>Welcome to COMPFEST Hospital</h1>
         <h2>We organize appointments with doctors, sign up now and join in!</h2>
-        <a href="#about" class="btn-get-started scrollto">Get Started</a>
+        {{if .TemplateSessionData.IsLoggedIn}}
+            {{if eq .TemplateSessionData.Username "admin"}}
+                <a href="/administration" class="btn-get-started scrollto">Organize</a>
+            {{else}}
+                <a href="/appointments" class="btn-get-started scrollto">Get Started</a>
+            {{end}}
+        {{else}}
+            <a href="/register" class="btn-get-started scrollto">Get Started</a>
+        {{end}}
     </div>
 </section><!-- End Hero -->
 {{end}}

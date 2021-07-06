@@ -25,16 +25,16 @@ DB
 #### Requirements
 
 - [ ] authentication
-  - [ ] jwt
+  - [x] jwt
 
 - [ ] acc roles
   - [x] admin
     - [x] default superuser acc
   - [ ] patient
-    - [ ] /register
-    - [ ] /login
+    - [x] /register
+    - [x] /login
     - [ ] /user/username
-    - [ ] /logout
+    - [x] /logout
 
 - [ ] admin funcs
   - [ ] doctor appointment
