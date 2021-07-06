@@ -11,15 +11,9 @@
 
     {{template "header" .}}
 
-    {{if .TemplateSessionData.IsLoggedIn}}
-        {{template "breadcrumbs" "Appointments"}}
-        
-        {{template "faq"}}
-    {{else}}
-        {{template "hero"}}
+    {{template "hero"}}
 
-        {{template "whyus"}}
-    {{end}}
+    {{template "whyus"}}
 
     <main id="main">
 

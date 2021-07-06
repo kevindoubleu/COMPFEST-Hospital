@@ -10,10 +10,11 @@
         <ul>
             <li><a class="nav-link scrollto" href="/">Home</a></li>
             {{if .TemplateSessionData.IsLoggedIn}}
-                {{if eq .TemplateSessionData.Username "\"admin\""}}
+                {{if eq .TemplateSessionData.Username "admin"}}
                     <li><a class="nav-link scrollto" href="/admin">Administration</a></li>
                 {{else}}
                     <li><a class="nav-link scrollto" href="/user/{{.TemplateSessionData.Username}}">Profile</a></li>
+                    <li><a class="nav-link scrollto" href="/appointments">Appointments</a></li>
                 {{end}}
                 <li><a class="nav-link scrollto" href="/logout">Logout</a></li>
             {{else}}
@@ -49,14 +50,14 @@
         <!-- .navbar -->
 
         {{if .TemplateSessionData.Username}}
-            <a href="/#appointment" class="appointment-btn scrollto">
+            <a href="/appointments" class="appointment-btn scrollto">
                 <span class="d-none d-md-inline">
                     {{.TemplateSessionData.Username}}, make an
                 </span>
                 Appointment
             </a>
         {{else}}
-            <a href="/#appointment" class="appointment-btn scrollto">
+            <a href="/register" class="appointment-btn scrollto">
                 <span class="d-none d-md-inline">Make an</span> Appointment
             </a>
         {{end}}

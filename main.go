@@ -28,6 +28,8 @@ func main() {
 	http.HandleFunc("/register", register)
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/logout", logout)
+
+	http.HandleFunc("/appointments", appointments)
 	
 	log.Printf("starting server")
 	log.Fatal(http.ListenAndServe(":8080", nil))
@@ -35,22 +37,39 @@ func main() {
 
 func homepage(w http.ResponseWriter, r *http.Request) {
 	if isLoggedIn(w, r) {
-		c, _ := r.Cookie(scName)
 		data := struct{
 			TemplateSessionData TemplateSessionData
 		}{
-			TemplateSessionData{
-				IsLoggedIn: true,
-				Username: dbSessions[c.Value].Username,
-			},
+			createTemplateSessionData(r),
 		}
-
 		tpl.ExecuteTemplate(w, "index.gohtml", data)
 	} else {
 		tpl.ExecuteTemplate(w, "index.gohtml", nil)
 	}
 }
 
+func appointments(w http.ResponseWriter, r *http.Request) {
+	if !isLoggedIn(w, r) {
+		http.Redirect(w, r, "/?msg="+ErrMsgNoSession, http.StatusSeeOther)
+		return
+	}
+
+	data := struct{
+		TemplateSessionData TemplateSessionData
+	}{
+		createTemplateSessionData(r),
+	}
+	tpl.ExecuteTemplate(w, "appointments.gohtml", data)
+}
+
 func test(w http.ResponseWriter, r *http.Request) {
 	tpl.ExecuteTemplate(w, "inner-page.gohtml", nil)
+}
+
+func createTemplateSessionData(r *http.Request) TemplateSessionData {
+	c, _ := r.Cookie(scName)
+	return TemplateSessionData{
+			IsLoggedIn: true,
+			Username: dbSessions[c.Value].Username,
+	}
 }

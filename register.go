@@ -57,8 +57,8 @@ func register(w http.ResponseWriter, r *http.Request) {
 		// debug
 		log.Printf("dbUsers: %#+v\n", dbUsers)
 	
-		// redirect to home
-		http.Redirect(w, r, "/?msg="+MsgRegistered, http.StatusSeeOther)
+		// redirect to appointments
+		http.Redirect(w, r, "/appointments?msg="+MsgRegistered, http.StatusSeeOther)
 		return
 	}
 }
