@@ -30,9 +30,7 @@
                                 {{.MyAppointment.Description}}
                             </p>
                         </div>
-                        <div class="float-end">
-                            <button type="button" class="btn btn-danger float-end">Cancel</button>
-                        </div>
+                        {{template "appointment-cancel" .MyAppointment.Doctor}}
                     </div>
                 </li>
                 {{end}}

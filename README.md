@@ -33,6 +33,7 @@ DB
 - change "patients" table into "users" table with an additional "role" field
   - this adds the abilty to manually add more admin role accounts
 - more specific text field types in "patients" table
+- change "patient" primary key to "username" instead of unnecessary field "id"
 
 #### Requirements
 
@@ -59,8 +60,8 @@ DB
 - [ ] patient funcs
   - [x] see list of appointments (all?)
   - [ ] apply for appointment
-    - [ ] check if fully booked registrant (how many?)
-  - [ ] cancel an appointment
+    - [x] check if fully booked registrant (how many?)
+  - [x] cancel an appointment
 
 ##### timeline
 
@@ -81,7 +82,7 @@ july 6
 
 july 7
 - admin create, update, delete
-- patient read
+- patient read, cancel
 
 ###### References
 
