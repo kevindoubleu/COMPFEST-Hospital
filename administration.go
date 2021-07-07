@@ -17,9 +17,18 @@ func init() {
 
 func isAdmin(w http.ResponseWriter, r *http.Request) bool {
 	claims := getJwtClaims(w, r)
-	if claims != nil && claims.Username == "admin" {
-		refreshSession(w, r)
-		return true
+	if claims != nil {
+		// check if still an active admin
+		row := db.QueryRow(`
+			SELECT admin FROM users WHERE username = $1`,
+			claims.Username)
+		var active bool
+		row.Scan(&active)
+
+		if active {
+			refreshSession(w, r)
+			return true
+		}
 	}
 	return false
 }
@@ -89,7 +98,7 @@ func administration(w http.ResponseWriter, r *http.Request) {
 		for i, a := range details {
 			rows, err := db.Query(`
 				SELECT firstname, lastname, age, email
-				FROM patients
+				FROM users
 				JOIN appointments
 					ON appointment_id = appointments.id
 				WHERE appointments.id = $1`,
@@ -183,7 +192,7 @@ func adminDelete(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		// unbook patients and delete appointment in db
 		_, err1 := db.Exec(`
-			UPDATE patients
+			UPDATE users
 			SET appointment_id = null
 			WHERE appointment_id = $1`,
 			r.PostFormValue("id"))

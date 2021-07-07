@@ -59,31 +59,33 @@ func initDB() *sql.DB {
 		)
 	`)
 	ErrPanic(err)
-	_, err = db.Exec(`DROP TABLE IF EXISTS patients`)
+	_, err = db.Exec(`DROP TABLE IF EXISTS users`)
 	ErrPanic(err)
 	_, err = db.Exec(`
-		CREATE TABLE patients(
-			id             SERIAL PRIMARY KEY,
+		CREATE TABLE users(
+			username       TEXT   PRIMARY KEY NOT NULL,
+			appointment_id INT    references appointments(id),
 			firstname      TEXT   NOT NULL,
 			lastname       TEXT   NOT NULL,
 			email          TEXT   NOT NULL,
 			age            INT    NOT NULL,
-			username       TEXT   NOT NULL,
 			password       TEXT   NOT NULL,
-			appointment_id INT    references appointments(id)
+			admin          BOOL   DEFAULT FALSE
 		)
 	`)
 	ErrPanic(err)
+	// we can add more admins in the future
+	// and we can revoke admin rights by setting admin to false
 
-	// reserve "admin" username
+	// default admin superuser
 	hash, _ := bcrypt.GenerateFromPassword(
 		// []byte("compfesthospitaladmin"),
 		[]byte("admin"),
 		bcrypt.DefaultCost)
 	_, err = db.Exec(`
-		INSERT INTO patients (firstname, lastname, age, email, username, password)
+		INSERT INTO users (firstname, lastname, age, email, username, password, admin)
 		VALUES
-			('admin', 'istrator', 0, 'admin@compfest.local', 'admin', $1)`,
+			('admin', 'istrator', 0, 'admin@compfest.local', 'admin', $1, true)`,
 		string(hash))
 	ErrPanic(err)
 
@@ -101,7 +103,7 @@ func initDB() *sql.DB {
 		[]byte("andi"),
 		bcrypt.DefaultCost)
 	_, err = db.Exec(`
-		INSERT INTO patients (firstname, lastname, age, email, username, password, appointment_id)
+		INSERT INTO users (firstname, lastname, age, email, username, password, appointment_id)
 		VALUES
 			('Andi', 'boots', 18, 'andi@email.com', 'aboots', $1, 1),
 			('Budi', 'man', 19, 'budi@email.com', 'budiman', '', 1),

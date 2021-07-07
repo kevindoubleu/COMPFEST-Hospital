@@ -27,7 +27,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		// check in user db
 		row := db.QueryRow(
-			"SELECT * FROM patients WHERE username = $1",
+			"SELECT * FROM users WHERE username = $1",
 			r.PostFormValue("username"))
 		if err := row.Scan(); err == sql.ErrNoRows {
 			http.Redirect(w, r, "/login?msg="+ErrMsgLoginFail, http.StatusSeeOther)
@@ -36,7 +36,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	
 		// check password
 		row = db.QueryRow(
-			"SELECT password FROM patients WHERE username = $1",
+			"SELECT password FROM users WHERE username = $1",
 			r.PostFormValue("username"))
 		var hash string
 		row.Scan(&hash)

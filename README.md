@@ -22,7 +22,7 @@ Sitemap / functionalities / features
 
 DB
 
-![](sketch/db.png)
+![](sketch/dbv2.png)
 
 ### Notes for COMPFEST
 
@@ -32,7 +32,7 @@ DB
 
 #### Requirements
 
-- [ ] authentication
+- [x] authentication
   - [x] jwt
 
 - [ ] acc roles
@@ -78,12 +78,13 @@ july 6
 july 7
 - admin create, update, delete
 - patient read, cancel, apply
+- update db schema
 
 ##### Original Requirements
 
-1. Authentication
-   - There are two types of account roles: **Administrator** and **Patient**.
-   - Users are only allowed to create account of role **Patient**. (create a super user account by default to act as an admin).
+1. ~~Authentication~~
+   - ~~There are two types of account roles: **Administrator** and **Patient**.~~ determined by "admin" field in "users" table
+   - ~~Users are only allowed to create account of role **Patient**. (create a super user account by default to act as an admin).~~
    - ~~Implement the usage of JWT in your authentication.~~
    - ~~An account must hold this information:~~
      - ~~First Name~~
@@ -112,9 +113,9 @@ july 7
 
 ###### Todo
 
-- change "patients" table into "users" table with an additional "role" field
-  - this adds the abilty to manually add more admin role accounts
-- change "patient" primary key to "username" instead of unnecessary field "id"
+- ~~change "patients" table into "users" table with an additional "role" field~~
+  - ~~this adds the abilty to manually add more admin role accounts~~
+- ~~change "patient" primary key to "username" instead of unnecessary field "id"~~
 - more specific text field types in "patients" table
 
 ###### References

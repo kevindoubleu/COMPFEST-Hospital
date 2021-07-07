@@ -31,19 +31,19 @@ func appointments(w http.ResponseWriter, r *http.Request) {
 		// get patient's registered appointment if exist
 		row := db.QueryRow(`
 			SELECT doctor, description
-			FROM patients
+			FROM users
 			JOIN appointments
 				ON appointment_id = appointments.id
-			WHERE patients.username = $1`,
+			WHERE users.username = $1`,
 			patientUsername)
 		patientAppointment := Appointment{}
 		row.Scan(&patientAppointment.Doctor, &patientAppointment.Description)
 	
 		// get appointments
 		rows, err := db.Query(`
-			SELECT appointments.id, doctor, description, count(patients.id) as registrant_count, capacity
+			SELECT appointments.id, doctor, description, count(users.*) as registrant_count, capacity
 			FROM appointments
-			LEFT JOIN patients
+			LEFT JOIN users
 				ON appointment_id = appointments.id
 			GROUP BY doctor, description, capacity, appointments.id
 			ORDER BY appointments.id
@@ -92,7 +92,7 @@ func appointmentsApply(w http.ResponseWriter, r *http.Request) {
 		uname := getJwtClaims(w, r).Username
 		row := db.QueryRow(`
 			SELECT
-			(SELECT appointment_id FROM patients WHERE username = $1) = null`,
+			(SELECT appointment_id FROM users WHERE username = $1) = null`,
 			uname)
 		var id sql.NullInt64
 		row.Scan(&id)
@@ -106,7 +106,7 @@ func appointmentsApply(w http.ResponseWriter, r *http.Request) {
 			SELECT
 			(
 				SELECT count(*)
-				FROM patients
+				FROM users
 				JOIN appointments
 					ON appointment_id = appointments.id
 				WHERE appointment_id = $1
@@ -128,7 +128,7 @@ func appointmentsApply(w http.ResponseWriter, r *http.Request) {
 
 		// assign the patient to the appointment
 		_, err = db.Exec(`
-			UPDATE patients
+			UPDATE users
 			SET appointment_id = $1
 			WHERE username = $2`,
 			r.PostFormValue("id"),
@@ -153,7 +153,7 @@ func appointmentsCancel(w http.ResponseWriter, r *http.Request) {
 	
 		// update in db
 		_, err := db.Exec(`
-			UPDATE patients
+			UPDATE users
 			SET appointment_id = null
 			WHERE username = $1`,
 			patientUsername)

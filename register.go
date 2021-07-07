@@ -34,7 +34,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 	
 		// check if duplicate username
 		row := db.QueryRow(
-			"SELECT * FROM patients WHERE username = $1",
+			"SELECT * FROM users WHERE username = $1",
 			r.PostFormValue("username"))
 		if err := row.Scan(); err != sql.ErrNoRows {
 			http.Redirect(w, r, "/register?msg="+ErrMsgRegisterFail, http.StatusSeeOther)
@@ -50,7 +50,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 			age = 0
 		}
 		_, err = db.Exec(`
-			INSERT INTO patients (firstname, lastname, age, email, username, password)
+			INSERT INTO users (firstname, lastname, age, email, username, password)
 			VALUES
 				($1, $2, $3, $4, $5, $6)`,
 			r.PostFormValue("firstname"),
