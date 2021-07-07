@@ -15,6 +15,9 @@ var ErrMsgSessionTimeout string
 var ErrMsgLoginFail string
 var ErrMsgRegisterFail string
 
+var ErrMsgApplyFail string
+var ErrMsgCancelFail string
+
 var ErrMsgInsertFail string
 var ErrMsgDeleteFail string
 var ErrMsgUpdateFail string
@@ -22,6 +25,9 @@ var ErrMsgUpdateFail string
 var MsgRegistered string
 var MsgLoggedIn string
 var MsgLoggedOut string
+
+var MsgApplySuccess string
+var MsgCancelSuccess string
 
 var MsgInsertSuccess string
 var MsgUpdateSuccess string
@@ -47,6 +53,9 @@ func init() {
 	ErrMsgLoginFail = "Incorrect username or password"
 	ErrMsgRegisterFail = "Sorry, that username is taken"
 
+	ErrMsgApplyFail = "Sorry, that appointment is fully booked or cancelled"
+	ErrMsgCancelFail = "Sorry, we can't cancel that appointment for now"
+
 	ErrMsgInsertFail = "Couldn't create entry in database"
 	ErrMsgDeleteFail = "Couldn't delete entry from database"
 	ErrMsgUpdateFail = "Couldn't update entry in database"
@@ -54,6 +63,9 @@ func init() {
 	MsgRegistered = "You have registered successfully"
 	MsgLoggedIn = "You are logged in"
 	MsgLoggedOut = "You have logged out"
+
+	MsgApplySuccess = "You have successfully applied for the appointment"
+	MsgCancelSuccess = "You have cancelled your appointment"
 
 	MsgInsertSuccess = "Successfully created entry in database"
 	MsgDeleteSuccess = "Successfully deleted entry from database"

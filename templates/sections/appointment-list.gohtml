@@ -16,39 +16,64 @@
         <div class="faq-list">
             <ul>
                 {{if .MyAppointment.Doctor}}
-                <li>
-                    <i class="bx bx-alarm icon-help"></i>
-                    <p class="faq-title">
-                        My Appointment
-                    </p>
-                    <div class="row">
-                        <div id="faq-list-mine" class="collapse show" data-bs-parent=".faq-list">
-                            <p>
-                                {{.MyAppointment.Doctor}}
-                            </p>
-                            <p>
-                                {{.MyAppointment.Description}}
-                            </p>
-                        </div>
-                        {{template "appointment-cancel" .MyAppointment.Doctor}}
-                    </div>
-                </li>
-                {{end}}
-                {{range $k, $v := .AppointmentSummaries}}
-                <li data-aos="fade-up" data-aos-delay="{{$k}}00">
-                    <i class="bx bx-calendar icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-{{$k}}" class="collapsed">
-                        {{$v.Appointment.Doctor}}
-                        <div class="float-end">
-                            Booked {{$v.RegistrantsCount}}/{{$v.Appointment.Capacity}}
-                        </div>
-                        <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i>
-                    </a>
-                    <div id="faq-list-{{$k}}" class="collapse" data-bs-parent=".faq-list">
-                        <p>
-                            {{$v.Appointment.Description}}
+                    <li>
+                        <i class="bx bx-alarm icon-help"></i>
+                        <p class="faq-title">
+                            My Appointment
                         </p>
-                    </div>
-                </li>
+                        <div class="row">
+                            <div id="faq-list-mine" class="collapse show" data-bs-parent=".faq-list">
+                                <p>
+                                    {{.MyAppointment.Doctor}}
+                                </p>
+                                <p>
+                                    {{.MyAppointment.Description}}
+                                </p>
+                            </div>
+                            {{template "appointment-cancel" .MyAppointment.Doctor}}
+                        </div>
+                    </li>
+                    {{range $k, $v := .AppointmentSummaries}}
+                    <li data-aos="fade-up" data-aos-delay="{{$k}}00">
+                        <i class="bx bx-calendar icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-{{$k}}" class="collapsed">
+                            {{$v.Appointment.Doctor}}
+                            <div class="float-end">
+                                Booked {{$v.RegistrantsCount}}/{{$v.Appointment.Capacity}}
+                            </div>
+                            <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i>
+                        </a>
+                        <div id="faq-list-{{$k}}" class="collapse" data-bs-parent=".faq-list">
+                            <p>
+                                {{$v.Appointment.Description}}
+                            </p>
+                        </div>
+                    </li>
+                    {{end}}
+                {{else}}
+                    {{range $k, $v := .AppointmentSummaries}}
+                    <li data-aos="fade-up" data-aos-delay="{{$k}}00">
+                        <i class="bx bx-calendar icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-{{$k}}" class="collapsed">
+                            {{$v.Appointment.Doctor}}
+                            <div class="float-end">
+                                Booked {{$v.RegistrantsCount}}/{{$v.Appointment.Capacity}}
+                            </div>
+                            <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i>
+                        </a>
+                        <div id="faq-list-{{$k}}" class="collapse" data-bs-parent=".faq-list">
+                            <p>
+                                {{$v.Appointment.Description}}
+                            </p>
+                            <hr>
+                            {{if lt $v.RegistrantsCount $v.Appointment.Capacity}}
+                                {{template "appointment-apply" $v.Appointment}}
+                            {{else}}
+                                <button type="button" class="btn btn-primary" disabled>
+                                    Full
+                                </button>
+                            {{end}}
+                        </div>
+                    </li>
+                    {{end}}
                 {{end}}
             </ul>
         </div>

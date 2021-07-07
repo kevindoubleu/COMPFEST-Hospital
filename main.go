@@ -16,6 +16,7 @@ func main() {
 	http.HandleFunc("/logout", logout)
 
 	http.HandleFunc("/appointments", appointments)
+	http.HandleFunc("/appointments/apply", appointmentsApply)
 	http.HandleFunc("/appointments/cancel", appointmentsCancel)
 
 	http.HandleFunc("/administration", administration)

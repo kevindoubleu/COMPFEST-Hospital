@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 )
@@ -13,6 +14,10 @@ type AppointmentSummary struct {
 type TemplatePatientData struct {
 	MyAppointment Appointment
 	AppointmentSummaries []AppointmentSummary
+}
+
+func init() {
+	dbPing()
 }
 
 func appointments(w http.ResponseWriter, r *http.Request) {
@@ -36,7 +41,7 @@ func appointments(w http.ResponseWriter, r *http.Request) {
 	
 		// get appointments
 		rows, err := db.Query(`
-			SELECT doctor, description, count(patients.id) as registrant_count, capacity
+			SELECT appointments.id, doctor, description, count(patients.id) as registrant_count, capacity
 			FROM appointments
 			LEFT JOIN patients
 				ON appointment_id = appointments.id
@@ -50,6 +55,7 @@ func appointments(w http.ResponseWriter, r *http.Request) {
 		for rows.Next() {
 			s := AppointmentSummary{}
 			err := rows.Scan(
+				&s.Appointment.Id,
 				&s.Appointment.Doctor,
 				&s.Appointment.Description,
 				&s.RegistrantsCount,
@@ -73,9 +79,74 @@ func appointments(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func appointmentsApply(w http.ResponseWriter, r *http.Request) {
+	refreshSession(w, r)
+
+	if r.Method == http.MethodGet {
+		http.Redirect(w, r, "/appointments", http.StatusSeeOther)
+		return
+	}
+
+	if r.Method == http.MethodPost {
+		// check if user is not already booked to any appointment
+		uname := getJwtClaims(w, r).Username
+		row := db.QueryRow(`
+			SELECT
+			(SELECT appointment_id FROM patients WHERE username = $1) = null`,
+			uname)
+		var id sql.NullInt64
+		row.Scan(&id)
+		if id.Valid {
+			http.Redirect(w, r, "/appointments?msg="+ErrMsgApplyFail, http.StatusSeeOther)
+			return
+		}
+
+		// check if full
+		row = db.QueryRow(`
+			SELECT
+			(
+				SELECT count(*)
+				FROM patients
+				JOIN appointments
+					ON appointment_id = appointments.id
+				WHERE appointment_id = $1
+			) < (
+				SELECT capacity
+				FROM appointments
+				WHERE id = $1
+			)`,
+			r.PostFormValue("id"))
+		var available bool
+		err := row.Scan(&available)
+		if err != nil || !available {
+			if err != nil {
+				log.Println("select db error", err)
+			}
+			http.Redirect(w, r, "/appointments?msg="+ErrMsgApplyFail, http.StatusSeeOther)
+			return
+		}
+
+		// assign the patient to the appointment
+		_, err = db.Exec(`
+			UPDATE patients
+			SET appointment_id = $1
+			WHERE username = $2`,
+			r.PostFormValue("id"),
+			uname)
+		if err != nil {
+			http.Redirect(w, r, "/appointments?msg="+ErrMsgApplyFail, http.StatusSeeOther)
+			return
+		}
+
+		http.Redirect(w, r, "/appointments?msg="+MsgApplySuccess, http.StatusSeeOther)
+		return
+	}
+}
+
 func appointmentsCancel(w http.ResponseWriter, r *http.Request) {
 	refreshSession(w, r)
 
+	// just use get bcs we can get unique id (username) from cookie
 	if r.Method == http.MethodGet {
 		// get patient username
 		patientUsername := getJwtClaims(w, r).Username
@@ -88,11 +159,16 @@ func appointmentsCancel(w http.ResponseWriter, r *http.Request) {
 			patientUsername)
 		if err != nil {
 			log.Println("update db error:", err)
-			http.Redirect(w, r, "/appointments?msg="+ErrMsgDeleteFail, http.StatusInternalServerError)
+			http.Redirect(w, r, "/appointments?msg="+ErrMsgCancelFail, http.StatusInternalServerError)
 			return
 		}
 
-		http.Redirect(w, r, "/appointments?msg="+MsgDeleteSuccess, http.StatusSeeOther)
+		http.Redirect(w, r, "/appointments?msg="+MsgCancelSuccess, http.StatusSeeOther)
+		return
+	}
+
+	if r.Method == http.MethodPost {
+		http.Redirect(w, r, "/appointments", http.StatusSeeOther)
 		return
 	}
 }

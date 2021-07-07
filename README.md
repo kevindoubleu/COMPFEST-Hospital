@@ -57,9 +57,9 @@ DB
     - [x] u
     - [x] d
 
-- [ ] patient funcs
+- [x] patient funcs
   - [x] see list of appointments (all?)
-  - [ ] apply for appointment
+  - [x] apply for appointment
     - [x] check if fully booked registrant (how many?)
   - [x] cancel an appointment
 
@@ -82,7 +82,7 @@ july 6
 
 july 7
 - admin create, update, delete
-- patient read, cancel
+- patient read, cancel, apply
 
 ###### References
 
