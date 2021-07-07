@@ -1,4 +1,12 @@
 {{define "admin-create"}}
+<!-- Button trigger modal -->
+<div class="text-center">
+    <a data-bs-toggle="modal" href="#exampleModalToggle" role="button">
+        <button class="medilab-button">Create</button>
+    </a>
+</div>
+
+<!-- Modal -->
 <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -23,6 +31,7 @@
                 </form>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" data-bs-dismiss="modal">Create</button>
             </div>
         </div>
@@ -39,16 +48,10 @@
             Confirm creation of new appointment?
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
+            <button class="btn btn-secondary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
             <button class="btn btn-success" type="submit" form="create-appointment">Confirm</button>
         </div>
     </div>
     </div>
-</div>
-
-<div class="text-center">
-    <a data-bs-toggle="modal" href="#exampleModalToggle" role="button">
-        <button class="medilab-button">Create</button>
-    </a>
 </div>
 {{end}}

@@ -17,12 +17,14 @@ var ErrMsgRegisterFail string
 
 var ErrMsgInsertFail string
 var ErrMsgDeleteFail string
+var ErrMsgUpdateFail string
 
 var MsgRegistered string
 var MsgLoggedIn string
 var MsgLoggedOut string
 
 var MsgInsertSuccess string
+var MsgUpdateSuccess string
 var MsgDeleteSuccess string
 
 var sessionDuration time.Duration
@@ -47,6 +49,7 @@ func init() {
 
 	ErrMsgInsertFail = "Couldn't create entry in database"
 	ErrMsgDeleteFail = "Couldn't delete entry from database"
+	ErrMsgUpdateFail = "Couldn't update entry in database"
 
 	MsgRegistered = "You have registered successfully"
 	MsgLoggedIn = "You are logged in"
@@ -54,6 +57,7 @@ func init() {
 
 	MsgInsertSuccess = "Successfully created entry in database"
 	MsgDeleteSuccess = "Successfully deleted entry from database"
+	MsgUpdateSuccess = "Successfully updated entry in database"
 
 	// config
 	sessionDuration = 15 * time.Minute

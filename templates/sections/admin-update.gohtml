@@ -1,0 +1,56 @@
+{{define "admin-update"}}
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateModalToggle{{.Id}}">
+    Update
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="updateModalToggle{{.Id}}" aria-hidden="true" aria-labelledby="updateModalToggle{{.Id}}Label" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateModalToggle{{.Id}}Label">Update appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="update-appointment-{{.Id}}" method="post" action="/administration/update">
+                    <div class="mb-3">
+                        <label for="doctor" class="form-label">Doctor name</label>
+                        <input type="text" class="form-control" id="doctor" name="doctor" value="{{.Doctor}}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Appointment description</label>
+                        <input type="text" class="form-control" id="description" name="description" value="{{.Description}}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="capacity" class="form-label">Capacity (maximum registrants)</label>
+                        <input type="number" class="form-control" id="capacity" name="capacity" value="{{.Capacity}}">
+                    </div>
+                    <input type="hidden" name="id" value="{{.Id}}">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" data-bs-target="#updateModalToggle{{.Id}}2" data-bs-toggle="modal" data-bs-dismiss="modal">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="updateModalToggle{{.Id}}2" aria-hidden="true" aria-labelledby="updateModalToggle{{.Id}}Label2" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateModalToggle{{.Id}}Label2">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Confirm update on the appointment?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-target="#updateModalToggle{{.Id}}" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
+                <button class="btn btn-success" type="submit" form="update-appointment-{{.Id}}">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

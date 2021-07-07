@@ -48,13 +48,13 @@ DB
     - [ ] /user/username
     - [x] /logout
 
-- [ ] admin funcs
-  - [ ] doctor appointment
-    - [ ] c
+- [x] admin funcs
+  - [x] doctor appointment crud
+    - [x] c
     - [x] r
       - [x] r registrants per appointment
-    - [ ] u
-    - [ ] d
+    - [x] u
+    - [x] d
 
 - [ ] patient funcs
   - [ ] see list of appointments (all?)
@@ -80,8 +80,7 @@ july 6
 - admin read
 
 july 7
-- admin create
-- admin delete
+- admin crud
 
 ###### References
 

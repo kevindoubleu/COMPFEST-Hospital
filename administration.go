@@ -44,7 +44,7 @@ func adminCreate(w http.ResponseWriter, r *http.Request) {
 			r.PostFormValue("description"),
 			r.PostFormValue("capacity"))
 		if err != nil {
-			log.Println(err)
+			log.Println("insert db error:", err)
 			http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusInternalServerError)
 			return
 		}
@@ -67,7 +67,7 @@ func administration(w http.ResponseWriter, r *http.Request) {
 		details := make([]AppointmentDetail, 0)
 
 		// get appointments from db
-		rows, err := db.Query("SELECT * FROM appointments;")
+		rows, err := db.Query("SELECT * FROM appointments ORDER BY id;")
 		ErrPanic(err)
 		defer rows.Close()
 
@@ -122,6 +122,45 @@ func administration(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// UPDATE
+func adminUpdate(w http.ResponseWriter, r *http.Request) {
+	// validate admin
+	if !isAdmin(w, r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	// GET -> not accepted
+	if r.Method == http.MethodGet {
+		http.Redirect(w, r, "/administration", http.StatusSeeOther)
+		return
+	}
+
+	// POST -> delete appointment based on id
+	if r.Method == http.MethodPost {
+		// update all fields bcs the original field values
+		// are already supplied to frontend
+		_, err := db.Exec(`
+			UPDATE appointments
+			SET doctor = $1,
+				description = $2,
+				capacity = $3
+			WHERE id = $4;`,
+			r.PostFormValue("doctor"),
+			r.PostFormValue("description"),
+			r.PostFormValue("capacity"),
+			r.PostFormValue("id"))
+		if err != nil {
+			log.Println("update db error:", err)
+			http.Redirect(w, r, "/administration?msg="+ErrMsgUpdateFail, http.StatusInternalServerError)
+			return
+		}
+
+		http.Redirect(w, r, "/administration?msg="+MsgUpdateSuccess, http.StatusSeeOther)
+		return
+	}
+}
+
 // DELETE
 func adminDelete(w http.ResponseWriter, r *http.Request) {
 	// validate admin
@@ -148,8 +187,8 @@ func adminDelete(w http.ResponseWriter, r *http.Request) {
 			DELETE FROM appointments WHERE id = $1`,
 			r.PostFormValue("id"))
 		if err1 != nil || err2 != nil {
-			log.Println(err1)
-			log.Println(err2)
+			log.Println("update db error:", err1)
+			log.Println("delete db error:", err2)
 			http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusInternalServerError)
 			return
 		}
