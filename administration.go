@@ -23,7 +23,7 @@ func isAdmin(w http.ResponseWriter, r *http.Request) bool {
 // CREATE
 func adminCreate(w http.ResponseWriter, r *http.Request) {
 	// validate admin
-	if isAdmin(w, r) {
+	if !isAdmin(w, r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
@@ -57,7 +57,7 @@ func adminCreate(w http.ResponseWriter, r *http.Request) {
 // READ
 func administration(w http.ResponseWriter, r *http.Request) {
 	// validate admin
-	if isAdmin(w, r) {
+	if !isAdmin(w, r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
@@ -118,6 +118,43 @@ func administration(w http.ResponseWriter, r *http.Request) {
 	// POST -> not acepted
 	if r.Method == http.MethodPost {
 		http.Redirect(w, r, "/administration", http.StatusSeeOther)
+		return
+	}
+}
+
+// DELETE
+func adminDelete(w http.ResponseWriter, r *http.Request) {
+	// validate admin
+	if !isAdmin(w, r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	// GET -> not accepted
+	if r.Method == http.MethodGet {
+		http.Redirect(w, r, "/administration", http.StatusSeeOther)
+		return
+	}
+
+	// POST -> delete appointment based on id
+	if r.Method == http.MethodPost {
+		// unbook patients and delete appointment in db
+		_, err1 := db.Exec(`
+			UPDATE patients
+			SET appointment_id = null
+			WHERE appointment_id = $1`,
+			r.PostFormValue("id"))
+		_, err2 := db.Exec(`
+			DELETE FROM appointments WHERE id = $1`,
+			r.PostFormValue("id"))
+		if err1 != nil || err2 != nil {
+			log.Println(err1)
+			log.Println(err2)
+			http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusInternalServerError)
+			return
+		}
+
+		http.Redirect(w, r, "/administration?msg="+MsgDeleteSuccess, http.StatusSeeOther)
 		return
 	}
 }

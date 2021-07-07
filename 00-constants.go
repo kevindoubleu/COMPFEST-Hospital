@@ -16,12 +16,14 @@ var ErrMsgLoginFail string
 var ErrMsgRegisterFail string
 
 var ErrMsgInsertFail string
+var ErrMsgDeleteFail string
 
 var MsgRegistered string
 var MsgLoggedIn string
 var MsgLoggedOut string
 
 var MsgInsertSuccess string
+var MsgDeleteSuccess string
 
 var sessionDuration time.Duration
 
@@ -44,12 +46,14 @@ func init() {
 	ErrMsgRegisterFail = "Sorry, that username is taken"
 
 	ErrMsgInsertFail = "Couldn't create entry in database"
+	ErrMsgDeleteFail = "Couldn't delete entry from database"
 
 	MsgRegistered = "You have registered successfully"
 	MsgLoggedIn = "You are logged in"
 	MsgLoggedOut = "You have logged out"
 
 	MsgInsertSuccess = "Successfully created entry in database"
+	MsgDeleteSuccess = "Successfully deleted entry from database"
 
 	// config
 	sessionDuration = 15 * time.Minute

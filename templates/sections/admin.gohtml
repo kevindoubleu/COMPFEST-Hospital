@@ -53,7 +53,7 @@
                     <br>
                     <!-- <button type="button" class="btn btn-success">Registrants</button> -->
                     <button type="button" class="btn btn-primary">Update</button>
-                    <button type="button" class="btn btn-danger">Delete</button>
+                    {{template "admin-delete" $v.Appointment}}
                 </div>
             </li>
             {{end}}

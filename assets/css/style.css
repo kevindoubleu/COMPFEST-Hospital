@@ -1268,7 +1268,7 @@ section {
   position: relative;
 }
 
-.faq .faq-list a {
+.faq .faq-list a:not(.no-padding) {
   display: block;
   position: relative;
   font-family: "Poppins", sans-serif;

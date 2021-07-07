@@ -19,6 +19,7 @@ func main() {
 
 	http.HandleFunc("/administration", administration)
 	http.HandleFunc("/administration/create", adminCreate)
+	http.HandleFunc("/administration/delete", adminDelete)
 
 	n := negroni.Classic()
 	n.Use(negroni.NewLogger())

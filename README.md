@@ -81,7 +81,7 @@ july 6
 
 july 7
 - admin create
-- 
+- admin delete
 
 ###### References
 
