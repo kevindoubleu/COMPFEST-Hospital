@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 )
 
@@ -10,10 +11,53 @@ type AppointmentDetail struct {
 	RegistrantsCount int
 }
 
+func init() {
+	dbPing()
+}
+
+func isAdmin(w http.ResponseWriter, r *http.Request) bool {
+	claims := getJwtClaims(w, r)
+	return claims != nil && claims.Username == "admin"
+}
+
+// CREATE
+func adminCreate(w http.ResponseWriter, r *http.Request) {
+	// validate admin
+	if isAdmin(w, r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	// GET -> not accepted
+	if r.Method == http.MethodGet {
+		http.Redirect(w, r, "/administration", http.StatusSeeOther)
+		return
+	}
+
+	// POST -> insert to db
+	if r.Method == http.MethodPost {
+		_, err := db.Exec(`
+			INSERT INTO appointments (doctor, description, capacity)
+			VALUES
+				($1, $2, $3)`,
+			r.PostFormValue("doctor"),
+			r.PostFormValue("description"),
+			r.PostFormValue("capacity"))
+		if err != nil {
+			log.Println(err)
+			http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusInternalServerError)
+			return
+		}
+
+		http.Redirect(w, r, "/administration?msg="+MsgInsertSuccess, http.StatusSeeOther)
+		return
+	}
+}
+
+// READ
 func administration(w http.ResponseWriter, r *http.Request) {
 	// validate admin
-	claims := getJwtClaims(w, r)
-	if claims == nil || claims.Username != "admin" {
+	if isAdmin(w, r) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
@@ -71,5 +115,9 @@ func administration(w http.ResponseWriter, r *http.Request) {
 		tpl.ExecuteTemplate(w, "administration.gohtml", data)
 	}
 
-	// POST
+	// POST -> not acepted
+	if r.Method == http.MethodPost {
+		http.Redirect(w, r, "/administration", http.StatusSeeOther)
+		return
+	}
 }

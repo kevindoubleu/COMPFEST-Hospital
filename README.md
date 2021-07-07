@@ -79,6 +79,10 @@ july 6
 - sketch + implement postgres db
 - admin read
 
+july 7
+- admin create
+- 
+
 ###### References
 
 [Implementing JWT based authentication in Golang](https://www.sohamkamani.com/golang/jwt-authentication/)

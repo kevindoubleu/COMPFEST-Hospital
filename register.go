@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -10,10 +9,7 @@ import (
 )
 
 func init() {
-	err := db.Ping()
-	if err == nil {
-		log.Println("register connected to db")
-	}
+	dbPing()
 }
 
 func register(w http.ResponseWriter, r *http.Request) {

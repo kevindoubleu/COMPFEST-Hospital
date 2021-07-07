@@ -1,0 +1,54 @@
+{{define "admin-create"}}
+<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalToggleLabel">Create a Doctor Appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="create-appointment" method="post" action="/administration/create">
+                    <div class="mb-3">
+                        <label for="doctor" class="form-label">Doctor name</label>
+                        <input type="text" class="form-control" id="doctor" name="doctor" placeholder="Dr. Strange">
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Appointment description</label>
+                        <input type="text" class="form-control" id="description" name="description" placeholder="Covid specialist doctor shares tips on how to stay alive">
+                    </div>
+                    <div class="mb-3">
+                        <label for="capacity" class="form-label">Capacity (maximum registrants)</label>
+                        <input type="number" class="form-control" id="capacity" name="capacity" placeholder="10">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" data-bs-dismiss="modal">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalToggleLabel2">Confirmation</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            Confirm creation of new appointment?
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
+            <button class="btn btn-success" type="submit" form="create-appointment">Confirm</button>
+        </div>
+    </div>
+    </div>
+</div>
+
+<div class="text-center">
+    <a data-bs-toggle="modal" href="#exampleModalToggle" role="button">
+        <button class="medilab-button">Create</button>
+    </a>
+</div>
+{{end}}

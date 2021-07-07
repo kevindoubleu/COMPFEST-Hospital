@@ -1280,6 +1280,15 @@ section {
   cursor: pointer;
 }
 
+.faq .faq-list .medilab-button {
+  background: #1977cc;
+  border: 0;
+  padding: 10px 35px;
+  color: #fff;
+  transition: 0.4s;
+  border-radius: 50px;
+}
+
 .faq .faq-list .icon-help {
   font-size: 24px;
   position: absolute;
