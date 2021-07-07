@@ -84,15 +84,19 @@ func initDB() *sql.DB {
 			('Mr. Strange', 'hey im a doctor yknow', 20)
 	`)
 	ErrPanic(err)
+	tmphash, _ := bcrypt.GenerateFromPassword(
+		// []byte("compfesthospitaladmin"),
+		[]byte("andi"),
+		bcrypt.DefaultCost)
 	_, err = db.Exec(`
 		INSERT INTO patients (firstname, lastname, age, email, username, password, appointment_id)
 		VALUES
-			('Andi', 'boots', 18, 'andi@email.com', 'aboots', '', 1),
+			('Andi', 'boots', 18, 'andi@email.com', 'aboots', $1, 1),
 			('Budi', 'man', 19, 'budi@email.com', 'budiman', '', 1),
 			('Cindy', 'gulla', 20, 'cindy@email.com', 'gulamanis', '', 1),
 			('Deni', 'korbusir', 21, 'budi@email.com', 'corbusir', '', 2),
-			('Eddy', 'gordo', 22, 'budi@email.com', 'tekken7', '', 2)
-	`)
+			('Eddy', 'gordo', 22, 'budi@email.com', 'tekken7', '', 2)`,
+		string(tmphash))
 	ErrPanic(err)
 
 	// reserve "admin" username

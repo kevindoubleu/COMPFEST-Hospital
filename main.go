@@ -43,14 +43,3 @@ func homepage(w http.ResponseWriter, r *http.Request) {
 	}
 	tpl.ExecuteTemplate(w, "index.gohtml", data)
 }
-
-func appointments(w http.ResponseWriter, r *http.Request) {
-	refreshSession(w, r)
-
-	data := struct{
-		TemplateSessionData TemplateSessionData
-	}{
-		createTemplateSessionData(w, r),
-	}
-	tpl.ExecuteTemplate(w, "appointments.gohtml", data)
-}

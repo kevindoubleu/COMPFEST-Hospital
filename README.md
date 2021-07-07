@@ -57,7 +57,7 @@ DB
     - [x] d
 
 - [ ] patient funcs
-  - [ ] see list of appointments (all?)
+  - [x] see list of appointments (all?)
   - [ ] apply for appointment
     - [ ] check if fully booked registrant (how many?)
   - [ ] cancel an appointment
@@ -77,10 +77,11 @@ july 6
 - login
 - jwt
 - sketch + implement postgres db
-- admin read
+- admin frontend + read
 
 july 7
-- admin crud
+- admin create, update, delete
+- patient read
 
 ###### References
 

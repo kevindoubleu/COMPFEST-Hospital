@@ -1280,6 +1280,17 @@ section {
   cursor: pointer;
 }
 
+.faq .faq-list .faq-title {
+  display: block;
+  position: relative;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  padding: 0 30px;
+  outline: none;
+}
+
 .faq .faq-list .medilab-button {
   background: #1977cc;
   border: 0;

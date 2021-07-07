@@ -17,7 +17,11 @@ func init() {
 
 func isAdmin(w http.ResponseWriter, r *http.Request) bool {
 	claims := getJwtClaims(w, r)
-	return claims != nil && claims.Username == "admin"
+	if claims != nil && claims.Username == "admin" {
+		refreshSession(w, r)
+		return true
+	}
+	return false
 }
 
 // CREATE
