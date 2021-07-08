@@ -25,8 +25,8 @@
                         <p>
                             {{$v.Appointment.Description}}
                         </p>
-                        {{if $v.Registrants}}
                         <hr>
+                        {{if $v.Registrants}}
                         <table class="table">
                             <thead>
                                 <tr>
@@ -50,7 +50,6 @@
                             </tbody>
                         </table>
                         {{end}}
-                        <hr>
                         {{template "admin-update" $v.Appointment}}
                         {{template "admin-delete" $v.Appointment}}
                     </div>
