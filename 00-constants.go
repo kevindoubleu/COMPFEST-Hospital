@@ -9,11 +9,13 @@ import (
 
 var db *sql.DB
 
+var ErrMsgGeneric string
 var ErrMsgHasSession string
 var ErrMsgNoSession string
 var ErrMsgSessionTimeout string
 var ErrMsgLoginFail string
 var ErrMsgRegisterFail string
+var ErrMsgChangePasswordFail string
 
 var ErrMsgApplyFail string
 var ErrMsgCancelFail string
@@ -25,6 +27,7 @@ var ErrMsgUpdateFail string
 var MsgRegistered string
 var MsgLoggedIn string
 var MsgLoggedOut string
+var MsgChangePasswordSuccess string
 
 var MsgApplySuccess string
 var MsgCancelSuccess string
@@ -47,11 +50,13 @@ func init() {
 	scName = "gosessid-v0.1"
 
 	// messages and err messages for toasts
+	ErrMsgGeneric = "Something went wrong"
 	ErrMsgHasSession = "You are already logged in"
 	ErrMsgNoSession = "You are not logged in"
 	ErrMsgSessionTimeout = "Your session has expired, please login again"
 	ErrMsgLoginFail = "Incorrect username or password"
-	ErrMsgRegisterFail = "Sorry, that username is taken"
+	ErrMsgRegisterFail = "Sorry, that username is taken or something went wrong"
+	ErrMsgChangePasswordFail = "Old password didn't match"
 
 	ErrMsgApplyFail = "Sorry, that appointment is fully booked or cancelled"
 	ErrMsgCancelFail = "Sorry, we can't cancel that appointment for now"
@@ -63,6 +68,7 @@ func init() {
 	MsgRegistered = "You have registered successfully"
 	MsgLoggedIn = "You are logged in"
 	MsgLoggedOut = "You have logged out"
+	MsgChangePasswordSuccess = "Password changed"
 
 	MsgApplySuccess = "You have successfully applied for the appointment"
 	MsgCancelSuccess = "You have cancelled your appointment"

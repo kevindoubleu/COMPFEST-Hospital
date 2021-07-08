@@ -80,6 +80,9 @@ july 7
 - patient read, cancel, apply
 - update db schema
 
+july 8
+- user profile crud (not a req but why not)
+
 ##### Original Requirements
 
 1. ~~Authentication~~

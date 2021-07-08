@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"net/http"
-	"strconv"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -13,25 +12,19 @@ func init() {
 }
 
 func register(w http.ResponseWriter, r *http.Request) {
+	if isLoggedIn(w, r) {
+		http.Redirect(w, r, "/?msg="+ErrMsgHasSession, http.StatusSeeOther)
+		return
+	}
+
 	// GET -> give form
 	if r.Method == http.MethodGet {
-		if isLoggedIn(w, r) {
-			http.Redirect(w, r, "/?msg="+ErrMsgHasSession, http.StatusSeeOther)
-			return
-		}
-
 		tpl.ExecuteTemplate(w, "register.gohtml", nil)
 		return
 	}
 
 	// POST -> process form
 	if r.Method == http.MethodPost {
-		// check session cookie if logged in
-		if isLoggedIn(w, r) {
-			http.Redirect(w, r, "/?msg=Already logged in", http.StatusSeeOther)
-			return
-		}
-	
 		// check if duplicate username
 		row := db.QueryRow(
 			"SELECT * FROM users WHERE username = $1",
@@ -45,21 +38,20 @@ func register(w http.ResponseWriter, r *http.Request) {
 		hash, _ := bcrypt.GenerateFromPassword(
 			[]byte(r.PostFormValue("password")),
 			bcrypt.DefaultCost)
-		age, err := strconv.Atoi(r.PostFormValue("age"))
-		if err != nil {
-			age = 0
-		}
-		_, err = db.Exec(`
+		_, err := db.Exec(`
 			INSERT INTO users (firstname, lastname, age, email, username, password)
 			VALUES
 				($1, $2, $3, $4, $5, $6)`,
 			r.PostFormValue("firstname"),
 			r.PostFormValue("lastname"),
-			age,
+			r.PostFormValue("age"),
 			r.PostFormValue("email"),
 			r.PostFormValue("username"),
 			string(hash))
-		ErrPanic(err)
+		if err != nil {
+			http.Redirect(w, r, "/register?msg="+ErrMsgRegisterFail, http.StatusSeeOther)
+			return
+		}
 
 		// create session so no need to login
 		createSession(w, r.PostFormValue("username"))

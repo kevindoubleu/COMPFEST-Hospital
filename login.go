@@ -21,6 +21,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	// GET -> give form
 	if r.Method == http.MethodGet {
 		tpl.ExecuteTemplate(w, "login.gohtml", nil)
+		return
 	}
 
 	// POST -> process form

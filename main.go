@@ -14,6 +14,8 @@ func main() {
 	http.HandleFunc("/register", register)
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/logout", logout)
+	http.HandleFunc("/profile", profile)
+	http.HandleFunc("/profile/password", profilePassword)
 
 	http.HandleFunc("/appointments", appointments)
 	http.HandleFunc("/appointments/apply", appointmentsApply)
