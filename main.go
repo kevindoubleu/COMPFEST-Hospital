@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/urfave/negroni"
 )
@@ -31,7 +32,14 @@ func main() {
 	n.UseHandler(http.DefaultServeMux)
 	
 	log.Printf("starting server")
-	log.Fatal(http.ListenAndServe(":8080", n))
+	port := os.Getenv("PORT")
+	if port == "" {
+		// local
+		log.Fatal(http.ListenAndServe(":8080", n))
+	} else {
+		// heroku
+		log.Fatal(http.ListenAndServe(":"+port, n))
+	}
 }
 
 func homepage(w http.ResponseWriter, r *http.Request) {

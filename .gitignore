@@ -5,6 +5,7 @@
 *.so
 *.dylib
 compfest-hospital
+bin/
 
 # Test binary, built with `go test -c`
 *.test
@@ -16,5 +17,5 @@ compfest-hospital
 # vendor/
 
 # frontend template
-Medilab
+Medilab/
 Medilab.zip

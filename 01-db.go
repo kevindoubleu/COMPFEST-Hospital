@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"log"
+	"os"
 
 	_ "github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
@@ -29,12 +30,16 @@ type Patient struct {
 func initDB() *sql.DB {
 	log.Println("initializing database")
 
-	connStr := `
-		user=compfestadmin
-		password=compfestadmin
-		dbname=hospital
-		host=127.0.0.1`
-	// db url and user will be provided in an env var in heroku
+	// heroku
+	connStr := os.Getenv("DATABASE_URL")
+	if connStr == "" {
+		// local
+		connStr = `
+			user=compfestadmin
+			password=compfestadmin
+			dbname=hospital
+			host=127.0.0.1`
+	}
 
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
@@ -79,8 +84,7 @@ func initDB() *sql.DB {
 
 	// default admin superuser
 	hash, _ := bcrypt.GenerateFromPassword(
-		// []byte("compfesthospitaladmin"),
-		[]byte("admin"),
+		[]byte("compfesthospitaladmin"),
 		bcrypt.DefaultCost)
 	_, err = db.Exec(`
 		INSERT INTO users (firstname, lastname, age, email, username, password, admin)
