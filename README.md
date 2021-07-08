@@ -1,6 +1,11 @@
 # COMPFEST-Hospital
 Hospital Information System - Software Engineering Academy COMPFEST Selection Task 2021
 
+  - [Backend](#backend)
+  - [Frontend](#frontend)
+  - [Assumptions (Notes for COMPFEST)](#assumptions-notes-for-compfest)
+  - [Documentation](#documentation)
+
 ## Backend
 
 Go, PostgreSQL, Heroku ([compfesthospital.herokuapp.com](https://compfesthospital.herokuapp.com/))
@@ -12,73 +17,29 @@ notes:
 ## Frontend
 
 Go ([html/template](https://pkg.go.dev/html/template))
+[Bootstrap 5](https://getbootstrap.com/)
+HTML, CSS, JS
 
-[Medilab Bootstrap 5 template from BootstrapMade](https://bootstrapmade.com/medilab-free-medical-bootstrap-theme/download/), modified to meet requirements
+## Assumptions (Notes for COMPFEST)
 
-### Sketch
-
-made with [draw.io](https://app.diagrams.net/)
-
-Sitemap / functionalities / features
-
-![](sketch/sketchv2.png)
-
-DB
-
-![](sketch/dbv2.png)
-
-No sessions table since we use JWT
-
-### Notes for COMPFEST
-
-- Requirement “List of registrant” dalam “Doctor appointment” tidak spesifik terhadap data registrant apa saja yang ditampilkan, dianggap hanya data pribadi: first name, last name, age, email (di [/administration](https://compfesthospital.herokuapp.com/administration)).
-
-- Requirement “Patients can see a list of appointments” kurang spesifik mengenai data appointment apa yang dapat dilihat, dianggap data yang tidak menyangkut pasien lain: doctor name, appointment description, total registrant, total appointment capacity (di [/appointments](https://compfesthospital.herokuapp.com/appointments)).
-
-- Requirement “fully booked registrant” tidak jelas spesifikasinya, dianggap setiap doctor appointment saat di create oleh admin akan ada maksimum registrant untuk masing-masing appointment (di [/administration](https://compfesthospital.herokuapp.com/administration) dan [/appointments](https://compfesthospital.herokuapp.com/appointments)).
-
-- Nama file ada yang diberi angka seperti `00-constants.go` untuk mengontrol compilation order
-
-#### Requirements -> Implementations / Notes
+Some unclear requirements are given, and we made these assumptions to make sure we deliver the end product as best as possible while still being on time.
 
 1. Authentication
-   - There are two types of account roles: **Administrator** and **Patient**. -> determined by "admin" field in "users" table
-   - Users are only allowed to create account of role **Patient**. (create a super user account by default to act as an admin). -> "admin" field is false by default
-   - Implement the usage of JWT in your authentication. -> stores username and session expiry time
-   - An account must hold this information: -> "users" table
-     - First Name
-     - Last Name
-     - Age
-     - Email
-     - Username
-     - Password
-1. Administrator Requirements -> admin crud on "appointments" table in `/administration` page
-   - Administrator can create a new doctor appointment.
-   - Doctor appointment must have this information: -> "appointments" table
-     - Doctor Name
-     - Appointment Description
-     - List of registrant -> use aggregate func
-   - Administrator can update doctor appointments.
-   - Administrator can delete doctor appointments.
-   - Administrator can see a list of patients that are registered in each appointment. -> only see, so admins cannot kick patients off appointments
-2. Patient Requirements -> patient `/appointments` page
-   - Patients can see a list of appointments. -> only doctor name, description, and total registrants, not data of other registrants
-   - Patients can apply for an appointment. -> "an" means one, so only 1 appointment per patient, implemented as field "appointment_id" in "users" table
-   - Patients can cancel their appointment. -> set "appointment_id" field as null
-   - Patients cannot apply for an appointment with a fully booked registrant. -> use aggregate func
-- When you are finished with your website, you should deploy it into cloud services, such as Heroku, Netlify, etc. -> https://compfesthospital.herokuapp.com/
-- Make sure you've created a good README in your repository about your project. -> hopefully this is good enough
-- Also make sure that your repository is public. -> yep
+   - There are two types of account roles \
+     It is not explicitly specified how this is implemented, so we went with a boolean field in the "users" table named "admin"
+2. Administrator
+   - "Administrator can see a list of patients that are registered in each appointment" \
+     Reading is the only necessary requirement, no editing
+   - Admins have no privileges to edit patient data
+3. Patient
+   - "Patients can see a list of appointments" \
+     Appointment data to be displayed is not specified, we assumed this to be public data; doctor name, description, current registrants count, and max registrants. Also it is stated that only patients can see this list, so users need to be registered as a patient to use this functionality
+   - "Patients cannot apply for an appointment with a fully booked registrant" \
+     It is not specified the details of what an appointment with a fully booked registrant is, so we decided that each appointment will have it's own maximum registrants count
 
-###### References
+## Documentation
 
-[Implementing JWT based authentication in Golang](https://www.sohamkamani.com/golang/jwt-authentication/)
-
-[Getting Started on Heroku with Go](https://devcenter.heroku.com/articles/getting-started-with-go)
-
-[Bootstrap 4.3 docs](https://getbootstrap.com/docs/4.3/getting-started/introduction/)
-
-[Go docs](https://pkg.go.dev/)
+This project has a [detailed documentation here](docs/spec.md), made conforming to [the requirements document](docs/requirements.pdf).
 
 ###### Footnotes
 

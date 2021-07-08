@@ -30,8 +30,8 @@
 
 - ~~change "patients" table into "users" table with an additional "role" field~~
   - ~~this adds the abilty to manually add more admin role accounts~~
-- ~~change "patient" primary key to "username" instead of unnecessary field "id"~~
-- more specific text field types in "patients" table
+- ~~change "users" primary key to "username" instead of unnecessary field "id"~~
+- more specific text field types in "users" table
 
 ## timeline
 
@@ -55,7 +55,12 @@ july 7
 - patient read, cancel, apply
 - update db schema
 
+at this point, minimum requirements are satisfied
+
 july 8
 - user profile frontend + read, update (not a req but why not)
 - toasts
 - heroku
+- documentation
+
+at this point, the project is basically done 
