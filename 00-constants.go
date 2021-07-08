@@ -9,6 +9,9 @@ import (
 
 var db *sql.DB
 
+var toastFail string
+var toastSuccess string
+
 var ErrMsgGeneric string
 var ErrMsgHasSession string
 var ErrMsgNoSession string
@@ -49,33 +52,37 @@ func init() {
 	// session cookie name
 	scName = "gosessid-v0.1"
 
+	// toast types
+	toastFail = "&alert=alert-danger"
+	toastSuccess = "&alert=alert-success"
+
 	// messages and err messages for toasts
-	ErrMsgGeneric = "Something went wrong"
-	ErrMsgHasSession = "You are already logged in"
-	ErrMsgNoSession = "You are not logged in"
-	ErrMsgSessionTimeout = "Your session has expired, please login again"
-	ErrMsgLoginFail = "Incorrect username or password"
-	ErrMsgRegisterFail = "Sorry, that username is taken or something went wrong"
-	ErrMsgChangePasswordFail = "Old password didn't match"
+	ErrMsgGeneric = "Something went wrong"+toastFail
+	ErrMsgHasSession = "You are already logged in"+toastFail
+	ErrMsgNoSession = "You are not logged in"+toastFail
+	ErrMsgSessionTimeout = "Your session has expired, please login again"+toastFail
+	ErrMsgLoginFail = "Incorrect username or password"+toastFail
+	ErrMsgRegisterFail = "Sorry, that username is taken or something went wrong"+toastFail
+	ErrMsgChangePasswordFail = "Old password didn't match"+toastFail
 
-	ErrMsgApplyFail = "Sorry, that appointment is fully booked or cancelled"
-	ErrMsgCancelFail = "Sorry, we can't cancel that appointment for now"
+	ErrMsgApplyFail = "Sorry, that appointment is fully booked or cancelled"+toastFail
+	ErrMsgCancelFail = "Sorry, we can't cancel that appointment for now"+toastFail
 
-	ErrMsgInsertFail = "Couldn't create entry in database"
-	ErrMsgDeleteFail = "Couldn't delete entry from database"
-	ErrMsgUpdateFail = "Couldn't update entry in database"
+	ErrMsgInsertFail = "Couldn't create entry in database"+toastFail
+	ErrMsgDeleteFail = "Couldn't delete entry from database"+toastFail
+	ErrMsgUpdateFail = "Couldn't update entry in database"+toastFail
 
-	MsgRegistered = "You have registered successfully"
-	MsgLoggedIn = "You are logged in"
-	MsgLoggedOut = "You have logged out"
-	MsgChangePasswordSuccess = "Password changed"
+	MsgRegistered = "You have registered successfully"+toastSuccess
+	MsgLoggedIn = "You are logged in"+toastSuccess
+	MsgLoggedOut = "You have logged out"+toastSuccess
+	MsgChangePasswordSuccess = "Password changed"+toastSuccess
 
-	MsgApplySuccess = "You have successfully applied for the appointment"
-	MsgCancelSuccess = "You have cancelled your appointment"
+	MsgApplySuccess = "You have successfully applied for the appointment"+toastSuccess
+	MsgCancelSuccess = "You have cancelled your appointment"+toastSuccess
 
-	MsgInsertSuccess = "Successfully created entry in database"
-	MsgDeleteSuccess = "Successfully deleted entry from database"
-	MsgUpdateSuccess = "Successfully updated entry in database"
+	MsgInsertSuccess = "Successfully created entry in database"+toastSuccess
+	MsgDeleteSuccess = "Successfully deleted entry from database"+toastSuccess
+	MsgUpdateSuccess = "Successfully updated entry in database"+toastSuccess
 
 	// config
 	sessionDuration = 15 * time.Minute

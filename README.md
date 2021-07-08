@@ -82,6 +82,8 @@ july 7
 
 july 8
 - user profile crud (not a req but why not)
+- toasts
+- heroku
 
 ##### Original Requirements
 

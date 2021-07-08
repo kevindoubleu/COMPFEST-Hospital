@@ -1,0 +1,59 @@
+{{define "alert"}}
+<style>
+    .alert {
+        position: fixed;
+        display: none;
+        z-index: 99999;
+        margin: auto;
+        width: 50%;
+        left: 25%;
+        padding: 10px;
+        margin-top: 68px;
+        text-align: center;
+        animation: fadeIn 1.5s ease-in;
+        overflow-wrap: break-word;
+    }
+    @media (max-width: 992px) {
+        .alert {
+            margin-top: 73px;
+        }
+    }
+
+    .alert-fade-in {
+        visibility: visible;
+        opacity: 1;
+        transition: opacity 2s linear;
+    }
+
+    .alert-fade-out {
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s 2s, opacity 2s linear;
+    }
+</style>
+
+<div id="alert" class="alert alert-fade-in alert-secondary alert-dismissible fade show" role="alert">
+    message will be put here
+</div>
+
+<script>
+    var url_string = window.location.href
+    var url = new URL(url_string);
+    var newurl = url_string.substr(0, url_string.indexOf('?')); 
+    var msg = url.searchParams.get("msg");
+    var type = url.searchParams.get("alert");
+
+    if (msg != null) {
+        document.getElementById("alert").style.display = "block";
+        document.getElementById("alert").innerHTML = msg;
+        document.getElementById("alert").classList.add(type);
+
+        window.history.pushState(null, "COMPFEST Hospital", newurl);
+
+        setTimeout(() => {
+            document.getElementById("alert").classList.remove("alert-fade-in");
+            document.getElementById("alert").classList.add("alert-fade-out");
+        }, 5000);
+    }
+</script>
+{{end}}
