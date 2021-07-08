@@ -18,3 +18,6 @@ git push heroku main
 
 # open the app
 heroku open
+
+# tail logs
+heroku logs --tail
