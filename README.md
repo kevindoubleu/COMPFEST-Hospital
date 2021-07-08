@@ -10,6 +10,17 @@ Hospital Information System - Software Engineering Academy COMPFEST Selection Ta
 
 Go, PostgreSQL, Heroku ([compfesthospital.herokuapp.com](https://compfesthospital.herokuapp.com/))
 
+Dependencies:
+- [github.com/dgrijalva/jwt-go](https://pkg.go.dev/github.com/dgrijalva/jwt-go) \
+  for JWT-based session authentication
+- [github.com/lib/pq](https://pkg.go.dev/github.com/lib/pq) \
+  postgresql driver
+- [github.com/urfave/negroni](https://pkg.go.dev/github.com/urfave/negroni) \
+  middleware for basic request logging
+- [golang.org/x/crypto](https://pkg.go.dev/crypto) \
+  bcrypt for encrypting passwords to store in the database
+- standard library
+
 notes:
 - default admin credentials are username:`admin` password:`compfesthospitaladmin`
 - sample patient credential username:`aboots` password:`andi`
@@ -17,7 +28,9 @@ notes:
 ## Frontend
 
 Go ([html/template](https://pkg.go.dev/html/template))
+
 [Bootstrap 5](https://getbootstrap.com/)
+
 HTML, CSS, JS
 
 ## Assumptions (Notes for COMPFEST)
@@ -40,6 +53,8 @@ Some unclear requirements are given, and we made these assumptions to make sure 
 ## Documentation
 
 This project has a [detailed documentation here](docs/spec.md), made conforming to [the requirements document](docs/requirements.pdf).
+
+___
 
 ###### Footnotes
 
