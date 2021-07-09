@@ -15,6 +15,7 @@ Table of Contents
     - [UI / Frontend](#ui--frontend)
       - [Accessibility](#accessibility)
   - [Functionality](#functionality)
+    - [Implementation details](#implementation-details)
     - [Hosting](#hosting)
   - [Assumptions](#assumptions)
   - [References](#references)
@@ -111,9 +112,33 @@ We used Go's `html/template` library to perform the templating and layouting.
 
 #### Accessibility
 
-Thanks to our template and sufficient CSS skills, we're able to make the entire webapp mobile friendly.
+Thanks to our template and sufficient CSS skills, we're able to make the entire webapp mobile friendly for both patients and administrators.
 
 ## Functionality
+
+High level overview on the capabilities of the webapp and the users:
+
+- Webapp
+  - Interface
+- Database
+  - Appointments
+  - Users
+- Administrators
+  - Create, read, update, delete appointments
+    - Delete / kick patients from appointemnts
+  - Create, read, update patient accounts
+    - Read exception for patient password
+    - Update exception for patient username
+    - Updating patient password requires the old password
+- Patients
+  - Read list of appointments
+  - Apply to an appointment
+    - Cancel their appointment
+  - Create an account
+    - Update account details
+    - Delete account
+
+### Implementation details
 
 As discussed in the [Features](#features) section, each page in the sitemap hosts a certain number of features, corresponding to the [requirements-annotated.pdf](requirements-annotated.pdf) document, the implementations are as follows:
 

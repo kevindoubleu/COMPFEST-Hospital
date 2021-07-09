@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{template "head" "Administration"}}
+</head>
+
+<body>
+
+    {{template "topbar"}}
+
+    {{template "header" .TemplateSessionData}}
+
+    <main id="main">
+
+    {{template "breadcrumbs" "Administration"}}
+
+    {{template "admin-appointments" .AppointmentDetails}}
+
+    </main>
+
+    {{template "footer"}}
+
+</body>
+
+</html>

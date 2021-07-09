@@ -125,7 +125,8 @@ func administration(w http.ResponseWriter, r *http.Request) {
 			details,
 		}
 
-		tpl.ExecuteTemplate(w, "administration.gohtml", data)
+		tpl.ExecuteTemplate(w, "admin-appointments.gohtml", data)
+		return
 	}
 
 	// POST -> not acepted

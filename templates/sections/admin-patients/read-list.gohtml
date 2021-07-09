@@ -1,0 +1,48 @@
+{{define "admin-patients"}}
+<!-- ======= Frequently Asked Questions Section ======= -->
+<section id="faq" class="faq section-bg">
+    <div class="container">
+
+        <div class="section-title">
+            <h2>Registered Patients</h2>
+            <p>
+                Create or update patient data here.
+            </p>
+        </div>
+
+        <div class="faq-list table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr class="table-primary">
+                        <th scope="col">#</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Firstname</th>
+                        <th scope="col">Lastname</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Email</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range $i, $v := .}}
+                    <tr>
+                        <th scope="row">{{inc $i}}</th>
+                        <td>{{$v.Username}}</td>
+                        <td>{{$v.Firstname}}</td>
+                        <td>{{$v.Lastname}}</td>
+                        <td>{{$v.Age}}</td>
+                        <td>{{$v.Email}}</td>
+                        <td><button type="button" class="btn btn-sm btn-primary no-padding">Edit</button></td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+            <div class="text-center">
+                <a data-bs-toggle="modal" href="#exampleModalToggle" role="button">
+                    <button class="medilab-button">Register a new patient</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</section><!-- End Frequently Asked Questions Section -->
+{{end}}

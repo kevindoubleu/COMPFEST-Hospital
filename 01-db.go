@@ -24,7 +24,7 @@ type Patient struct {
 	Email string
 	Username string
 	Password string
-	Appointment_id int
+	Appointment_id sql.NullInt64
 }
 
 func initDB() *sql.DB {
@@ -72,8 +72,8 @@ func initDB() *sql.DB {
 			appointment_id INT    references appointments(id),
 			firstname      TEXT   NOT NULL,
 			lastname       TEXT   NOT NULL,
-			email          TEXT   NOT NULL,
 			age            INT    NOT NULL,
+			email          TEXT   NOT NULL,
 			password       TEXT   NOT NULL,
 			admin          BOOL   DEFAULT FALSE
 		)
@@ -84,7 +84,8 @@ func initDB() *sql.DB {
 
 	// default admin superuser
 	hash, _ := bcrypt.GenerateFromPassword(
-		[]byte("compfesthospitaladmin"),
+		// []byte("compfesthospitaladmin"),
+		[]byte("admin"),
 		bcrypt.DefaultCost)
 	_, err = db.Exec(`
 		INSERT INTO users (firstname, lastname, age, email, username, password, admin)
@@ -112,8 +113,8 @@ func initDB() *sql.DB {
 			('Andi', 'boots', 18, 'andi@email.com', 'aboots', $1, 1),
 			('Budi', 'man', 19, 'budi@email.com', 'budiman', '', 1),
 			('Cindy', 'gulla', 20, 'cindy@email.com', 'gulamanis', '', 1),
-			('Deni', 'korbusir', 21, 'budi@email.com', 'corbusir', '', 2),
-			('Eddy', 'gordo', 22, 'budi@email.com', 'tekken7', '', 2)`,
+			('Deni', 'korbusir', 21, 'deni@email.com', 'corbusir', '', 2),
+			('Eddy', 'gordo', 22, 'eddy@email.com', 'tekken7', '', 2)`,
 		string(tmphash))
 	ErrPanic(err)
 

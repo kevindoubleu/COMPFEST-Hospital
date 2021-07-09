@@ -5,6 +5,7 @@ import "log"
 type TemplateSessionData struct {
 	IsLoggedIn bool
 	Username string
+	IsAdmin bool
 }
 
 func ErrFatal(err error) {

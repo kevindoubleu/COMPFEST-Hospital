@@ -45,9 +45,17 @@ func createTemplateSessionData(w http.ResponseWriter, r *http.Request) TemplateS
 	if claims == nil {
 		return TemplateSessionData{}
 	} else {
+		// check in db if username is admin
+		row := db.QueryRow(`
+			SELECT admin FROM users WHERE username = $1`,
+			claims.Username)
+		var isAdmin bool
+		row.Scan(&isAdmin)
+		
 		return TemplateSessionData{
 				IsLoggedIn: isLoggedIn(w, r),
 				Username: claims.Username,
+				IsAdmin: isAdmin,
 		}
 	}
 }

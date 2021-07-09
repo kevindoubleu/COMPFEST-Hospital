@@ -63,4 +63,9 @@ july 8
 - heroku
 - documentation
 
-at this point, the project is basically done 
+at this point, the project is basically done \
+gonna add more stuff for extra points, will keep continuing
+
+july 9
+- admin read on patient data
+
