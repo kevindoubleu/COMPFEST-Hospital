@@ -1,4 +1,4 @@
-{{define "admin"}}
+{{define "admin-appointments"}}
 <!-- ======= Frequently Asked Questions Section ======= -->
 <section id="faq" class="faq section-bg">
     <div class="container">
@@ -50,13 +50,13 @@
                             </tbody>
                         </table>
                         {{end}}
-                        {{template "admin-update" $v.Appointment}}
-                        {{template "admin-delete" $v.Appointment}}
+                        {{template "admin-appointments-update" $v.Appointment}}
+                        {{template "admin-appointments-delete" $v.Appointment}}
                     </div>
                 </li>
                 {{end}}
             </ul>
-            {{template "admin-create"}}
+            {{template "admin-appointments-create"}}
         </div>
 
     </div>

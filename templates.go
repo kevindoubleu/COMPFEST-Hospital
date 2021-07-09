@@ -6,6 +6,7 @@ import (
 )
 
 var tpl *template.Template
+
 func init() {
 	log.Println("initializing templates")
 
@@ -18,8 +19,11 @@ func init() {
 	tpl = template.New("").Funcs(funcMap)
 	tpl.ParseGlob("templates/components/*.gohtml")
 	tpl.ParseGlob("templates/sections/*.gohtml")
+	tpl.ParseGlob("templates/sections/index/*.gohtml")
+	tpl.ParseGlob("templates/sections/appointments/*.gohtml")
+	tpl.ParseGlob("templates/sections/admin-appointments/*.gohtml")
+	tpl.ParseGlob("templates/sections/admin-patients/*.gohtml")
 	tpl.ParseGlob("templates/pages/*.gohtml")
-	tpl.ParseGlob("templates/layouts/*.gohtml")
 
 	log.Println("initialized templates")
 }
