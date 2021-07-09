@@ -1,7 +1,39 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+)
 
+// CREATE
+func patientsCreate(w http.ResponseWriter, r *http.Request) {
+	// validate admin
+	if !isAdmin(w, r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	// GET -> not accepted
+	if r.Method == http.MethodGet {
+		http.Redirect(w, r, "/administration/patients", http.StatusSeeOther)
+		return
+	}
+
+	// POST -> process form
+	if r.Method == http.MethodPost {
+		// use the same controller as in the normal register
+		r.ParseForm()
+		success, url, code := doRegister(r.PostForm, "/administration/patients")
+		if !success {
+			http.Redirect(w, r, url, code)
+			return
+		}
+		
+		http.Redirect(w, r, "/administration/patients?msg="+MsgInsertSuccess, http.StatusSeeOther)
+		return
+	}
+}
+
+// READ
 func patients(w http.ResponseWriter, r *http.Request) {
 	// validate admin
 	if !isAdmin(w, r) {

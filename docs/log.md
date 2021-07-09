@@ -68,4 +68,4 @@ gonna add more stuff for extra points, will keep continuing
 
 july 9
 - admin read on patient data
-
+- admin create patient account

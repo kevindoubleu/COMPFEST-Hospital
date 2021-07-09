@@ -18,6 +18,7 @@ var ErrMsgNoSession string
 var ErrMsgSessionTimeout string
 var ErrMsgLoginFail string
 var ErrMsgRegisterFail string
+var ErrMsgConfirmPasswordFail string
 var ErrMsgChangePasswordFail string
 
 var ErrMsgApplyFail string
@@ -63,6 +64,7 @@ func init() {
 	ErrMsgSessionTimeout = "Your session has expired, please login again"+toastFail
 	ErrMsgLoginFail = "Incorrect username or password"+toastFail
 	ErrMsgRegisterFail = "Sorry, that username is taken or something went wrong"+toastFail
+	ErrMsgConfirmPasswordFail = "Password and password confirmation doesn't match"+toastFail
 	ErrMsgChangePasswordFail = "Old password didn't match"+toastFail
 
 	ErrMsgApplyFail = "Sorry, that appointment is fully booked or cancelled"+toastFail

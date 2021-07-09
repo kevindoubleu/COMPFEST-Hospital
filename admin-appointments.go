@@ -15,24 +15,6 @@ func init() {
 	dbPing()
 }
 
-func isAdmin(w http.ResponseWriter, r *http.Request) bool {
-	claims := getJwtClaims(w, r)
-	if claims != nil {
-		// check if still an active admin
-		row := db.QueryRow(`
-			SELECT admin FROM users WHERE username = $1`,
-			claims.Username)
-		var active bool
-		row.Scan(&active)
-
-		if active {
-			refreshSession(w, r)
-			return true
-		}
-	}
-	return false
-}
-
 // CREATE
 func adminCreate(w http.ResponseWriter, r *http.Request) {
 	// validate admin

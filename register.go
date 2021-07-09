@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"net/http"
+	"net/url"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -25,31 +26,11 @@ func register(w http.ResponseWriter, r *http.Request) {
 
 	// POST -> process form
 	if r.Method == http.MethodPost {
-		// check if duplicate username
-		row := db.QueryRow(
-			"SELECT * FROM users WHERE username = $1",
-			r.PostFormValue("username"))
-		if err := row.Scan(); err != sql.ErrNoRows {
-			http.Redirect(w, r, "/register?msg="+ErrMsgRegisterFail, http.StatusSeeOther)
-			return
-		}
-		
-		// create user in user db
-		hash, _ := bcrypt.GenerateFromPassword(
-			[]byte(r.PostFormValue("password")),
-			bcrypt.DefaultCost)
-		_, err := db.Exec(`
-			INSERT INTO users (firstname, lastname, age, email, username, password)
-			VALUES
-				($1, $2, $3, $4, $5, $6)`,
-			r.PostFormValue("firstname"),
-			r.PostFormValue("lastname"),
-			r.PostFormValue("age"),
-			r.PostFormValue("email"),
-			r.PostFormValue("username"),
-			string(hash))
-		if err != nil {
-			http.Redirect(w, r, "/register?msg="+ErrMsgRegisterFail, http.StatusSeeOther)
+		// parse the form for db insertion
+		r.ParseForm()
+		success, url, code := doRegister(r.PostForm, "/register")
+		if !success {
+			http.Redirect(w, r, url, code)
 			return
 		}
 
@@ -60,4 +41,36 @@ func register(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/appointments?msg="+MsgRegistered, http.StatusSeeOther)
 		return
 	}
+}
+
+func doRegister(postFormData url.Values, prevUrl string) (success bool, redirect string, statusCode int) {
+	// confirm password
+	if postFormData.Get("password") != postFormData.Get("confirmpassword") {
+		return false, prevUrl+"?msg="+ErrMsgConfirmPasswordFail, http.StatusSeeOther
+	}
+
+	// check if duplicate username
+	row := db.QueryRow(
+		"SELECT * FROM users WHERE username = $1",
+		postFormData.Get("username"))
+	if err := row.Scan(); err != sql.ErrNoRows {
+		return false, prevUrl+"?msg="+ErrMsgConfirmPasswordFail, http.StatusSeeOther
+	}
+
+	// create user in user db
+	hash, _ := bcrypt.GenerateFromPassword(
+		[]byte(postFormData.Get("password")),
+		bcrypt.DefaultCost)
+	_, err := db.Exec(`
+		INSERT INTO users (firstname, lastname, age, email, username, password)
+		VALUES
+			($1, $2, $3, $4, $5, $6)`,
+		postFormData.Get("firstname"),
+		postFormData.Get("lastname"),
+		postFormData.Get("age"),
+		postFormData.Get("email"),
+		postFormData.Get("username"),
+		string(hash))
+
+	return err == nil, prevUrl+"?msg="+ErrMsgConfirmPasswordFail, http.StatusSeeOther
 }
