@@ -27,7 +27,7 @@
                         </p>
                         <hr>
                         {{if $v.Registrants}}
-                        <table class="table">
+                        <table class="table table-responsive">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
@@ -35,6 +35,7 @@
                                     <th scope="col">Lastname</th>
                                     <th scope="col">Age</th>
                                     <th scope="col">Email</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -45,6 +46,7 @@
                                     <td>{{$r.Lastname}}</td>
                                     <td>{{$r.Age}}</td>
                                     <td>{{$r.Email}}</td>
+                                    <td>{{template "admin-appointments-kick" $r}}</td>
                                 </tr>
                             {{end}}
                             </tbody>

@@ -23,6 +23,7 @@ var ErrMsgVerifyPasswordFail string
 
 var ErrMsgApplyFail string
 var ErrMsgCancelFail string
+var ErrMsgKickFail string
 
 var ErrMsgInsertFail string
 var ErrMsgDeleteFail string
@@ -35,6 +36,7 @@ var MsgChangePasswordSuccess string
 
 var MsgApplySuccess string
 var MsgCancelSuccess string
+var MsgKickSuccess string
 
 var MsgInsertSuccess string
 var MsgUpdateSuccess string
@@ -69,6 +71,7 @@ func init() {
 
 	ErrMsgApplyFail = "Sorry, that appointment is fully booked or cancelled"+toastFail
 	ErrMsgCancelFail = "Sorry, we can't cancel that appointment for now"+toastFail
+	ErrMsgKickFail = "Failed kicking the registrant"+toastFail
 
 	ErrMsgInsertFail = "Couldn't create entry in database"+toastFail
 	ErrMsgDeleteFail = "Couldn't delete entry from database"+toastFail
@@ -81,6 +84,7 @@ func init() {
 
 	MsgApplySuccess = "You have successfully applied for the appointment"+toastSuccess
 	MsgCancelSuccess = "You have cancelled your appointment"+toastSuccess
+	MsgKickSuccess = "Successfully kicked registrant"+toastSuccess
 
 	MsgInsertSuccess = "Successfully created entry in database"+toastSuccess
 	MsgDeleteSuccess = "Successfully deleted entry from database"+toastSuccess

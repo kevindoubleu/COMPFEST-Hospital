@@ -17,7 +17,6 @@ type Appointment struct {
 }
 
 type Patient struct {
-	Id int
 	Firstname string
 	Lastname string
 	Age int

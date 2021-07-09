@@ -72,3 +72,4 @@ july 9
 - admin update on patient data
 - admin update on patient password
 - user profile delete
+- admins can cancel patient's applied appointment in appointment listing

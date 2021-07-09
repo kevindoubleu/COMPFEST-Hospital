@@ -27,6 +27,7 @@ func main() {
 	http.HandleFunc("/administration/create", adminCreate)
 	http.HandleFunc("/administration/update", adminUpdate)
 	http.HandleFunc("/administration/delete", adminDelete)
+	http.HandleFunc("/administration/kick", adminKick)
 
 	http.HandleFunc("/administration/patients", patients)
 	http.HandleFunc("/administration/patients/create", patientsCreate)

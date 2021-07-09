@@ -25,7 +25,7 @@ func adminCreate(w http.ResponseWriter, r *http.Request) {
 
 	// GET -> not accepted
 	if r.Method == http.MethodGet {
-		http.Redirect(w, r, "/administration", http.StatusSeeOther)
+		http.Redirect(w, r, "/administration", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -79,7 +79,7 @@ func administration(w http.ResponseWriter, r *http.Request) {
 		// get registrants of each appointment
 		for i, a := range details {
 			rows, err := db.Query(`
-				SELECT firstname, lastname, age, email
+				SELECT username, firstname, lastname, age, email
 				FROM users
 				JOIN appointments
 					ON appointment_id = appointments.id
@@ -90,7 +90,7 @@ func administration(w http.ResponseWriter, r *http.Request) {
 
 			for rows.Next() {
 				r := Patient{}
-				err := rows.Scan(&r.Firstname, &r.Lastname, &r.Age, &r.Email)
+				err := rows.Scan(&r.Username, &r.Firstname, &r.Lastname, &r.Age, &r.Email)
 				ErrPanic(err)
 				details[i].Registrants = append(details[i].Registrants, r)
 
@@ -113,7 +113,7 @@ func administration(w http.ResponseWriter, r *http.Request) {
 
 	// POST -> not acepted
 	if r.Method == http.MethodPost {
-		http.Redirect(w, r, "/administration", http.StatusSeeOther)
+		http.Redirect(w, r, "/administration", http.StatusMethodNotAllowed)
 		return
 	}
 }
@@ -128,7 +128,7 @@ func adminUpdate(w http.ResponseWriter, r *http.Request) {
 
 	// GET -> not accepted
 	if r.Method == http.MethodGet {
-		http.Redirect(w, r, "/administration", http.StatusSeeOther)
+		http.Redirect(w, r, "/administration", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -167,7 +167,7 @@ func adminDelete(w http.ResponseWriter, r *http.Request) {
 
 	// GET -> not accepted
 	if r.Method == http.MethodGet {
-		http.Redirect(w, r, "/administration", http.StatusSeeOther)
+		http.Redirect(w, r, "/administration", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -190,6 +190,36 @@ func adminDelete(w http.ResponseWriter, r *http.Request) {
 		}
 
 		http.Redirect(w, r, "/administration?msg="+MsgDeleteSuccess, http.StatusSeeOther)
+		return
+	}
+}
+
+func adminKick(w http.ResponseWriter, r *http.Request) {
+	// validate admin
+	if !isAdmin(w, r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	// GET -> not accepted
+	if r.Method == http.MethodGet {
+		http.Redirect(w, r, "/administration", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// POST -> process
+	if r.Method == http.MethodPost {
+		_, err := db.Exec(`
+			UPDATE users
+			SET appointment_id = null
+			WHERE username = $1`,
+			r.PostFormValue("username"))
+		if err != nil {
+			http.Redirect(w, r, "/administration?msg="+ErrMsgKickFail, http.StatusInternalServerError)
+			return
+		}
+
+		http.Redirect(w, r, "/administration?msg="+MsgKickSuccess, http.StatusSeeOther)
 		return
 	}
 }
