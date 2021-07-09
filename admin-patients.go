@@ -9,13 +9,13 @@ import (
 func patientsCreate(w http.ResponseWriter, r *http.Request) {
 	// validate admin
 	if !isAdmin(w, r) {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		http.Redirect(w, r, "/", http.StatusUnauthorized)
 		return
 	}
 
 	// GET -> not accepted
 	if r.Method == http.MethodGet {
-		http.Redirect(w, r, "/administration/patients", http.StatusSeeOther)
+		http.Redirect(w, r, "/administration/patients", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -38,7 +38,7 @@ func patientsCreate(w http.ResponseWriter, r *http.Request) {
 func patients(w http.ResponseWriter, r *http.Request) {
 	// validate admin
 	if !isAdmin(w, r) {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		http.Redirect(w, r, "/", http.StatusUnauthorized)
 		return
 	}
 
@@ -78,7 +78,7 @@ func patients(w http.ResponseWriter, r *http.Request) {
 
 	// POST -> not accepted
 	if r.Method == http.MethodPost {
-		http.Redirect(w, r, "/administration/patients", http.StatusSeeOther)
+		http.Redirect(w, r, "/administration/patients", http.StatusMethodNotAllowed)
 		return
 	}
 }
@@ -87,13 +87,13 @@ func patients(w http.ResponseWriter, r *http.Request) {
 func patientsUpdate(w http.ResponseWriter, r *http.Request) {
 	// validate admin
 	if !isAdmin(w, r) {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		http.Redirect(w, r, "/", http.StatusUnauthorized)
 		return
 	}
 
 	// GET -> not accepted
 	if r.Method == http.MethodGet {
-		http.Redirect(w, r, "/administration/patients", http.StatusSeeOther)
+		http.Redirect(w, r, "/administration/patients", http.StatusMethodNotAllowed)
 		return
 	}
 

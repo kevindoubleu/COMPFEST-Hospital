@@ -59,7 +59,7 @@ func refreshSession(w http.ResponseWriter, r *http.Request) {
 		createSession(w, claims.Username)
 	} else {
 		// expired session
-		http.Redirect(w, r, "/login?msg="+ErrMsgSessionTimeout, http.StatusSeeOther)
+		http.Redirect(w, r, "/login?msg="+ErrMsgSessionTimeout, http.StatusUnauthorized)
 	}
 }
 

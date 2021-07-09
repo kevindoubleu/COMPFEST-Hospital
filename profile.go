@@ -9,7 +9,7 @@ import (
 
 func profile(w http.ResponseWriter, r *http.Request) {
 	if !isLoggedIn(w, r) {
-		http.Redirect(w, r, "/?msg="+ErrMsgNoSession, http.StatusSeeOther)
+		http.Redirect(w, r, "/?msg="+ErrMsgNoSession, http.StatusUnauthorized)
 		return
 	}
 
@@ -78,13 +78,13 @@ func doProfileUpdate(newUser Patient, prev string) (success bool, url string, co
 
 func profilePassword(w http.ResponseWriter, r *http.Request) {
 	if !isLoggedIn(w, r) {
-		http.Redirect(w, r, "/?msg="+ErrMsgNoSession, http.StatusSeeOther)
+		http.Redirect(w, r, "/?msg="+ErrMsgNoSession, http.StatusUnauthorized)
 		return
 	}
 
 	// GET -> return to profile
 	if r.Method == http.MethodGet {
-		http.Redirect(w, r, "/profile", http.StatusSeeOther)
+		http.Redirect(w, r, "/profile", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -94,7 +94,7 @@ func profilePassword(w http.ResponseWriter, r *http.Request) {
 
 		// compare oldpassword with old hash
 		if correctPassword(uname, r.PostFormValue("oldpassword")) {
-			http.Redirect(w, r, "/profile?msg="+ErrMsgVerifyPasswordFail, http.StatusSeeOther)
+			http.Redirect(w, r, "/profile?msg="+ErrMsgVerifyPasswordFail, http.StatusBadGateway)
 			return
 		}
 
@@ -123,13 +123,13 @@ func doProfilePasswordUpdate(username, password string, prev string) (success bo
 
 func profileDelete(w http.ResponseWriter, r *http.Request) {
 	if !isLoggedIn(w, r) {
-		http.Redirect(w, r, "/?msg="+ErrMsgNoSession, http.StatusSeeOther)
+		http.Redirect(w, r, "/?msg="+ErrMsgNoSession, http.StatusUnauthorized)
 		return
 	}
 
 	// GET -> return to profile
 	if r.Method == http.MethodGet {
-		http.Redirect(w, r, "/profile", http.StatusSeeOther)
+		http.Redirect(w, r, "/profile", http.StatusMethodNotAllowed)
 		return
 	}
 	
@@ -138,7 +138,7 @@ func profileDelete(w http.ResponseWriter, r *http.Request) {
 		// compare password
 		uname := getJwtClaims(w, r).Username
 		if !correctPassword(uname, r.PostFormValue("password")) {
-			http.Redirect(w, r, "/profile?msg="+ErrMsgVerifyPasswordFail, http.StatusSeeOther)
+			http.Redirect(w, r, "/profile?msg="+ErrMsgVerifyPasswordFail, http.StatusBadRequest)
 			return
 		}
 
@@ -147,7 +147,7 @@ func profileDelete(w http.ResponseWriter, r *http.Request) {
 			DELETE FROM users WHERE username = $1`,
 			uname)
 		if err != nil {
-			http.Redirect(w, r, "/profile?msg="+ErrMsgDeleteFail, http.StatusSeeOther)
+			http.Redirect(w, r, "/profile?msg="+ErrMsgDeleteFail, http.StatusBadRequest)
 			return
 		}
 

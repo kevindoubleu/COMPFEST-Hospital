@@ -83,7 +83,7 @@ func appointmentsApply(w http.ResponseWriter, r *http.Request) {
 	refreshSession(w, r)
 
 	if r.Method == http.MethodGet {
-		http.Redirect(w, r, "/appointments", http.StatusSeeOther)
+		http.Redirect(w, r, "/appointments", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -97,7 +97,7 @@ func appointmentsApply(w http.ResponseWriter, r *http.Request) {
 		var id sql.NullInt64
 		row.Scan(&id)
 		if id.Valid {
-			http.Redirect(w, r, "/appointments?msg="+ErrMsgApplyFail, http.StatusSeeOther)
+			http.Redirect(w, r, "/appointments?msg="+ErrMsgApplyFail, http.StatusBadRequest)
 			return
 		}
 
@@ -122,7 +122,7 @@ func appointmentsApply(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				log.Println("select db error", err)
 			}
-			http.Redirect(w, r, "/appointments?msg="+ErrMsgApplyFail, http.StatusSeeOther)
+			http.Redirect(w, r, "/appointments?msg="+ErrMsgApplyFail, http.StatusBadRequest)
 			return
 		}
 
@@ -134,7 +134,7 @@ func appointmentsApply(w http.ResponseWriter, r *http.Request) {
 			r.PostFormValue("id"),
 			uname)
 		if err != nil {
-			http.Redirect(w, r, "/appointments?msg="+ErrMsgApplyFail, http.StatusSeeOther)
+			http.Redirect(w, r, "/appointments?msg="+ErrMsgApplyFail, http.StatusBadRequest)
 			return
 		}
 
@@ -159,7 +159,7 @@ func appointmentsCancel(w http.ResponseWriter, r *http.Request) {
 			patientUsername)
 		if err != nil {
 			log.Println("update db error:", err)
-			http.Redirect(w, r, "/appointments?msg="+ErrMsgCancelFail, http.StatusInternalServerError)
+			http.Redirect(w, r, "/appointments?msg="+ErrMsgCancelFail, http.StatusBadRequest)
 			return
 		}
 
@@ -168,7 +168,7 @@ func appointmentsCancel(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == http.MethodPost {
-		http.Redirect(w, r, "/appointments", http.StatusSeeOther)
+		http.Redirect(w, r, "/appointments", http.StatusMethodNotAllowed)
 		return
 	}
 }

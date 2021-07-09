@@ -19,7 +19,7 @@ func init() {
 func adminCreate(w http.ResponseWriter, r *http.Request) {
 	// validate admin
 	if !isAdmin(w, r) {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		http.Redirect(w, r, "/", http.StatusUnauthorized)
 		return
 	}
 
@@ -40,7 +40,7 @@ func adminCreate(w http.ResponseWriter, r *http.Request) {
 			r.PostFormValue("capacity"))
 		if err != nil {
 			log.Println("insert db error:", err)
-			http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusInternalServerError)
+			http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusBadRequest)
 			return
 		}
 
@@ -53,7 +53,7 @@ func adminCreate(w http.ResponseWriter, r *http.Request) {
 func administration(w http.ResponseWriter, r *http.Request) {
 	// validate admin
 	if !isAdmin(w, r) {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		http.Redirect(w, r, "/", http.StatusUnauthorized)
 		return
 	}
 
@@ -122,7 +122,7 @@ func administration(w http.ResponseWriter, r *http.Request) {
 func adminUpdate(w http.ResponseWriter, r *http.Request) {
 	// validate admin
 	if !isAdmin(w, r) {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		http.Redirect(w, r, "/", http.StatusUnauthorized)
 		return
 	}
 
@@ -148,7 +148,7 @@ func adminUpdate(w http.ResponseWriter, r *http.Request) {
 			r.PostFormValue("id"))
 		if err != nil {
 			log.Println("update db error:", err)
-			http.Redirect(w, r, "/administration?msg="+ErrMsgUpdateFail, http.StatusInternalServerError)
+			http.Redirect(w, r, "/administration?msg="+ErrMsgUpdateFail, http.StatusBadRequest)
 			return
 		}
 
@@ -161,7 +161,7 @@ func adminUpdate(w http.ResponseWriter, r *http.Request) {
 func adminDelete(w http.ResponseWriter, r *http.Request) {
 	// validate admin
 	if !isAdmin(w, r) {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		http.Redirect(w, r, "/", http.StatusUnauthorized)
 		return
 	}
 
@@ -185,7 +185,7 @@ func adminDelete(w http.ResponseWriter, r *http.Request) {
 		if err1 != nil || err2 != nil {
 			log.Println("update db error:", err1)
 			log.Println("delete db error:", err2)
-			http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusInternalServerError)
+			http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusBadRequest)
 			return
 		}
 
@@ -197,7 +197,7 @@ func adminDelete(w http.ResponseWriter, r *http.Request) {
 func adminKick(w http.ResponseWriter, r *http.Request) {
 	// validate admin
 	if !isAdmin(w, r) {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		http.Redirect(w, r, "/", http.StatusUnauthorized)
 		return
 	}
 
@@ -215,7 +215,7 @@ func adminKick(w http.ResponseWriter, r *http.Request) {
 			WHERE username = $1`,
 			r.PostFormValue("username"))
 		if err != nil {
-			http.Redirect(w, r, "/administration?msg="+ErrMsgKickFail, http.StatusInternalServerError)
+			http.Redirect(w, r, "/administration?msg="+ErrMsgKickFail, http.StatusBadRequest)
 			return
 		}
 

@@ -14,7 +14,7 @@ func init() {
 
 func register(w http.ResponseWriter, r *http.Request) {
 	if isLoggedIn(w, r) {
-		http.Redirect(w, r, "/?msg="+ErrMsgHasSession, http.StatusSeeOther)
+		http.Redirect(w, r, "/?msg="+ErrMsgHasSession, http.StatusForbidden)
 		return
 	}
 

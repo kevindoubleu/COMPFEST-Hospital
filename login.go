@@ -13,7 +13,7 @@ func init() {
 
 func login(w http.ResponseWriter, r *http.Request) {
 	if isLoggedIn(w, r) {
-		http.Redirect(w, r, "/?msg="+ErrMsgHasSession, http.StatusSeeOther)
+		http.Redirect(w, r, "/?msg="+ErrMsgHasSession, http.StatusUnauthorized)
 		return
 	}
 	
@@ -30,13 +30,13 @@ func login(w http.ResponseWriter, r *http.Request) {
 			"SELECT * FROM users WHERE username = $1",
 			r.PostFormValue("username"))
 		if err := row.Scan(); err == sql.ErrNoRows {
-			http.Redirect(w, r, "/login?msg="+ErrMsgLoginFail, http.StatusSeeOther)
+			http.Redirect(w, r, "/login?msg="+ErrMsgLoginFail, http.StatusBadRequest)
 			return
 		}
 	
 		// check password
 		if !correctPassword(r.PostFormValue("username"), r.PostFormValue("password")) {
-			http.Redirect(w, r, "/login?msg="+ErrMsgLoginFail, http.StatusSeeOther)
+			http.Redirect(w, r, "/login?msg="+ErrMsgLoginFail, http.StatusBadRequest)
 			return
 		}
 	
