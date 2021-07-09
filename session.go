@@ -44,7 +44,8 @@ func createSession(w http.ResponseWriter, username string) {
 		Path: "/",
 		MaxAge: int(sessionDuration) / int(time.Second),
 		HttpOnly: true,
-		// Secure: true,
+		SameSite: http.SameSiteStrictMode,
+		Secure: true,
 	})
 }
 

@@ -1291,7 +1291,8 @@ section {
   outline: none;
 }
 
-.faq .faq-list .medilab-button {
+.faq .medilab-button {
+  margin-top: 16px;
   background: #1977cc;
   border: 0;
   padding: 10px 35px;

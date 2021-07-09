@@ -68,4 +68,6 @@ gonna add more stuff for extra points, will keep continuing
 
 july 9
 - admin read on patient data
-- admin create patient account
+- admin create patient account from `/administration/patients`
+- admin update on patient data
+

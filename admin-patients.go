@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"strconv"
 )
 
 // CREATE
@@ -47,6 +48,8 @@ func patients(w http.ResponseWriter, r *http.Request) {
 		rows, err := db.Query(`
 			SELECT username, firstname, lastname, age, email, appointment_id
 			FROM users
+			WHERE admin = false
+			ORDER BY username
 		`)
 		ErrPanic(err)
 		defer rows.Close()
@@ -76,6 +79,38 @@ func patients(w http.ResponseWriter, r *http.Request) {
 	// POST -> not accepted
 	if r.Method == http.MethodPost {
 		http.Redirect(w, r, "/administration/patients", http.StatusSeeOther)
+		return
+	}
+}
+
+// UPDATE
+func patientsUpdate(w http.ResponseWriter, r *http.Request) {
+	// validate admin
+	if !isAdmin(w, r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	// GET -> not accepted
+	if r.Method == http.MethodGet {
+		http.Redirect(w, r, "/administration/patients", http.StatusSeeOther)
+		return
+	}
+
+	// POST -> process form
+	if r.Method == http.MethodPost {
+		// update record in db
+		age, _ := strconv.Atoi(r.PostFormValue("age"))
+		newUser := Patient{
+			Firstname: r.PostFormValue("firstname"),
+			Lastname: r.PostFormValue("lastname"),
+			Age: age,
+			Email: r.PostFormValue("email"),
+			Username: r.PostFormValue("username"),
+		}
+
+		_, url, code := doProfileUpdate(newUser, "/administration/patients")
+		http.Redirect(w, r, url, code)
 		return
 	}
 }

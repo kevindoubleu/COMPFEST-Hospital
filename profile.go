@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"strconv"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -37,27 +38,41 @@ func profile(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		// update user data in db
 		uname := getJwtClaims(w, r).Username
-		_, err := db.Exec(`
-			UPDATE users
-			SET
-				firstname = $1,
-				lastname = $2,
-				age = $3,
-				email = $4
-			WHERE
-				username = $5`,
-			r.PostFormValue("firstname"),
-			r.PostFormValue("lastname"),
-			r.PostFormValue("age"),
-			r.PostFormValue("email"),
-			uname)
-		if err != nil {
-			http.Redirect(w, r, "/profile?msg="+ErrMsgUpdateFail, http.StatusSeeOther)
-			return
+		age, _ := strconv.Atoi(r.PostFormValue("age"))
+		newUser := Patient{
+			Firstname: r.PostFormValue("firstname"),
+			Lastname: r.PostFormValue("lastname"),
+			Age: age,
+			Email: r.PostFormValue("email"),
+			Username: uname,
 		}
+		_, url, code := doProfileUpdate(newUser, "/profile")
 
-		http.Redirect(w, r, "/profile?msg="+MsgUpdateSuccess, http.StatusSeeOther)
+		http.Redirect(w, r, url, code)
 		return
+	}
+}
+
+func doProfileUpdate(newUser Patient, prev string) (success bool, url string, code int) {
+	_, err := db.Exec(`
+		UPDATE users
+		SET
+			firstname = $1,
+			lastname = $2,
+			age = $3,
+			email = $4
+		WHERE
+			username = $5`,
+		newUser.Firstname,
+		newUser.Lastname,
+		newUser.Age,
+		newUser.Email,
+		newUser.Username)
+		
+	if err != nil {
+		return false, prev+"?msg="+ErrMsgUpdateFail, http.StatusInternalServerError
+	} else {
+		return true, prev+"?msg="+MsgUpdateSuccess, http.StatusSeeOther
 	}
 }
 

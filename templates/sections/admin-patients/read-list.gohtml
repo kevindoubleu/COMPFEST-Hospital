@@ -32,13 +32,13 @@
                         <td>{{$v.Lastname}}</td>
                         <td>{{$v.Age}}</td>
                         <td>{{$v.Email}}</td>
-                        <td><button type="button" class="btn btn-sm btn-primary no-padding">Edit</button></td>
+                        <td>{{template "admin-patients-update" $v}}</td>
                     </tr>
                     {{end}}
                 </tbody>
             </table>
-            {{template "admin-patients-create"}}
         </div>
+        {{template "admin-patients-create"}}
     </div>
 </section><!-- End Frequently Asked Questions Section -->
 {{end}}

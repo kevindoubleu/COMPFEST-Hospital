@@ -1,0 +1,64 @@
+{{define "admin-patients-update"}}
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#updateModalToggle{{.Username}}">
+    Edit
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="updateModalToggle{{.Username}}" aria-hidden="true" aria-labelledby="updateModalToggle{{.Username}}Label" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateModalToggle{{.Username}}Label">Update patient data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="update-appointment-{{.Username}}" method="post" action="/administration/patients/update">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" value="{{.Username}}" disabled>
+                        <input type="hidden" name="username" value="{{.Username}}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="firstname" class="form-label">First name</label>
+                        <input type="text" class="form-control" id="firstname" name="firstname" value="{{.Firstname}}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastname" class="form-label">Last name</label>
+                        <input type="text" class="form-control" id="lastname" name="lastname" value="{{.Lastname}}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="age" class="form-label">Age</label>
+                        <input type="number" class="form-control" id="age" name="age" value="{{.Age}}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{.Email}}">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" data-bs-target="#updateModalToggle{{.Username}}2" data-bs-toggle="modal" data-bs-dismiss="modal">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="updateModalToggle{{.Username}}2" aria-hidden="true" aria-labelledby="updateModalToggle{{.Username}}Label2" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateModalToggle{{.Username}}Label2">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Confirm update on the appointment?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-target="#updateModalToggle{{.Username}}" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
+                <button class="btn btn-success" type="submit" form="update-appointment-{{.Username}}">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

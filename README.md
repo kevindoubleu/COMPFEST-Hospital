@@ -58,5 +58,8 @@ ___
 
 ###### Footnotes
 
-I genuinely really enjoy making this webapp, using minimal frameworks, with a new language I just learned, facing all it's challenges.
+I hope the frontend part is acceptable, I suck at it, but I really want to get in the academy though so I packed this with as many backend features as I can think of. Also I only knew about this event 1 week prior to the registration deadline :')
+
+That aside though, I genuinely really enjoy making this webapp, using minimal frameworks, with a new language I just learned, facing all it's challenges.
+
 I hope to learn more of this in the academy, I really want to be able to do more of this, and to make it my job, and learn even more in the field!

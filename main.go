@@ -29,6 +29,7 @@ func main() {
 
 	http.HandleFunc("/administration/patients", patients)
 	http.HandleFunc("/administration/patients/create", patientsCreate)
+	http.HandleFunc("/administration/patients/update", patientsUpdate)
 
 	n := negroni.Classic()
 	n.Use(negroni.NewLogger())
