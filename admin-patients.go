@@ -108,6 +108,12 @@ func patientsUpdate(w http.ResponseWriter, r *http.Request) {
 			Email: r.PostFormValue("email"),
 			Username: r.PostFormValue("username"),
 		}
+		if r.PostFormValue("password") != "" {
+			doProfilePasswordUpdate(
+				r.PostFormValue("username"),
+				r.PostFormValue("password"),
+				"/administration/patients")
+		}
 
 		_, url, code := doProfileUpdate(newUser, "/administration/patients")
 		http.Redirect(w, r, url, code)

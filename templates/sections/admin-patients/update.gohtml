@@ -35,6 +35,14 @@
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" name="email" value="{{.Email}}">
                     </div>
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="form-check-input" id="changePasswordCheck{{.Username}}">
+                        <label class="form-check-label" for="changePasswordCheck{{.Username}}">Change password</label>
+                    </div>
+                    <div class="mb-3" id="password-div-{{.Username}}">
+                        <label for="password" class="form-label">New password</label>
+                        <input type="password" class="form-control" id="password-form-{{.Username}}" name="password" placeholder="New password" disabled>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -52,7 +60,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Confirm update on the appointment?
+                Confirm update on patient data?
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-target="#updateModalToggle{{.Username}}" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
@@ -61,4 +69,24 @@
         </div>
     </div>
 </div>
+
+<script>
+    // hide password form by default
+    document.getElementById("password-form-{{.Username}}").style.display = "none";
+    document.getElementById("password-div-{{.Username}}").style.display = "none";
+
+    // if change password is ticked
+    // show the password form and enable it
+    document.getElementById("changePasswordCheck{{.Username}}").addEventListener("change", () => {
+        if (document.getElementById("changePasswordCheck{{.Username}}").checked) {
+            document.getElementById("password-form-{{.Username}}").style.display = "block";
+            document.getElementById("password-div-{{.Username}}").style.display = "block";
+            document.getElementById("password-form-{{.Username}}").disabled = false;
+        } else {
+            document.getElementById("password-form-{{.Username}}").style.display = "none";
+            document.getElementById("password-div-{{.Username}}").style.display = "none";
+            document.getElementById("password-form-{{.Username}}").disabled = true;
+        }
+    })
+</script>
 {{end}}

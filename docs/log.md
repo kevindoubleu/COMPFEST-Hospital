@@ -70,4 +70,4 @@ july 9
 - admin read on patient data
 - admin create patient account from `/administration/patients`
 - admin update on patient data
-
+- admin update on patient password

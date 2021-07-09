@@ -107,18 +107,24 @@ func profilePassword(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// update with newpassword
-		newHash, _ := bcrypt.GenerateFromPassword(
-			[]byte(r.PostFormValue("newpassword")), bcrypt.DefaultCost)
-		_, err = db.Exec(`
-			UPDATE users SET password = $1 WHERE username = $2`,
-			string(newHash),
-			uname)
-		if err != nil {
-			http.Redirect(w, r, "/profile?msg="+ErrMsgGeneric, http.StatusSeeOther)
-			return
-		}
-
-		http.Redirect(w, r, "/profile?msg="+MsgChangePasswordSuccess, http.StatusSeeOther)
+		_, url, code := doProfilePasswordUpdate(uname, r.PostFormValue("newpassword"), "/profile")
+		http.Redirect(w, r, url, code)
 		return
+	}
+}
+
+// handles the password plaintext hashing
+func doProfilePasswordUpdate(username, password string, prev string) (success bool, url string, code int) {
+	newHash, _ := bcrypt.GenerateFromPassword(
+		[]byte(password), bcrypt.DefaultCost)
+	_, err := db.Exec(`
+		UPDATE users SET password = $1 WHERE username = $2`,
+		string(newHash),
+		username)
+
+	if err != nil {
+		return false, prev+"?msg="+ErrMsgGeneric, http.StatusInternalServerError
+	} else {
+		return true, prev+"?msg="+MsgChangePasswordSuccess, http.StatusSeeOther
 	}
 }
