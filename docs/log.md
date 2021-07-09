@@ -71,3 +71,4 @@ july 9
 - admin create patient account from `/administration/patients`
 - admin update on patient data
 - admin update on patient password
+- user profile delete

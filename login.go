@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"log"
 	"net/http"
 
 	"golang.org/x/crypto/bcrypt"
@@ -36,17 +35,8 @@ func login(w http.ResponseWriter, r *http.Request) {
 		}
 	
 		// check password
-		row = db.QueryRow(
-			"SELECT password FROM users WHERE username = $1",
-			r.PostFormValue("username"))
-		var hash string
-		row.Scan(&hash)
-		err := bcrypt.CompareHashAndPassword(
-			[]byte(hash),
-			[]byte(r.PostFormValue("password")))
-		if err != nil {
+		if !correctPassword(r.PostFormValue("username"), r.PostFormValue("password")) {
 			http.Redirect(w, r, "/login?msg="+ErrMsgLoginFail, http.StatusSeeOther)
-			log.Printf("err: %#+v\n", err)
 			return
 		}
 	
@@ -57,4 +47,16 @@ func login(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/?msg="+MsgLoggedIn, http.StatusSeeOther)
 		return
 	}
+}
+
+func correctPassword(username, password string) bool {
+	row := db.QueryRow(`
+		SELECT password FROM users WHERE username = $1`,
+		username)
+	var hash string
+	row.Scan(&hash)
+
+	err := bcrypt.CompareHashAndPassword(
+		[]byte(hash), []byte(password))
+	return err == nil
 }

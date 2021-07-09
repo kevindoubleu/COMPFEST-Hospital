@@ -15,7 +15,7 @@
     
     {{template "breadcrumbs" "Profile"}}
     
-    <section id="appointment" class="appointment section-bg">
+    <section class="appointment section-bg">
         <div class="container">
 
             <div class="section-title">
@@ -66,7 +66,7 @@
         </div>
     </section>
 
-    <section id="appointment" class="appointment section-bg">
+    <section class="appointment section-bg">
         <div class="container">
 
             <div class="section-title">
@@ -92,6 +92,29 @@
             </form>
 
         </div>
+    </section>
+    
+    <section class="section-bg">
+        <div class="section-title">
+            <h2>Danger zone</h2>
+        </div>
+
+        <form action="/profile/delete" method="post" id="deletePassword">
+            <div class="row justify-content-center">
+                <div class="col-md-8 form-group mt-3 mt-md-0">
+                    <label for="password" class="form-label">Enter your password to delete your account</label>
+                    <input id="password" type="password" name="password" class="form-control" placeholder="Password" required aria-describedby="deleteHelp">
+                    <div id="deleteHelp" class="form-text">This action cannot be undone</div>
+                </div>
+            </div>
+        </form>
+
+        <div class="text-center">
+            <button type="submit" class="medilab-button" style="background: darkred" form="deletePassword">
+                Delete account
+            </button>
+        </div>
+
     </section>
 
     </main>

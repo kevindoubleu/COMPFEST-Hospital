@@ -17,6 +17,7 @@ func main() {
 	http.HandleFunc("/logout", logout)
 	http.HandleFunc("/profile", profile)
 	http.HandleFunc("/profile/password", profilePassword)
+	http.HandleFunc("/profile/delete", profileDelete)
 
 	http.HandleFunc("/appointments", appointments)
 	http.HandleFunc("/appointments/apply", appointmentsApply)
@@ -47,9 +48,20 @@ func main() {
 }
 
 func homepage(w http.ResponseWriter, r *http.Request) {
-	_, err := r.Cookie(scName)
-	if err != http.ErrNoCookie {
-		refreshSession(w, r)
+	claims := getJwtClaims(w, r)
+	if claims != nil {
+		// check if user still in db
+		row := db.QueryRow(`
+			SELECT username FROM users WHERE username = $1`,
+			claims.Username)
+		var uname string
+		row.Scan(&uname)
+
+		if uname == "" {
+			destroyJwtCookie(w, r)
+		} else {
+			refreshSession(w, r)
+		}
 	}
 
 	data := struct{

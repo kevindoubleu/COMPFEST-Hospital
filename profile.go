@@ -93,16 +93,8 @@ func profilePassword(w http.ResponseWriter, r *http.Request) {
 		uname := getJwtClaims(w, r).Username
 
 		// compare oldpassword with old hash
-		row := db.QueryRow(`
-			SELECT password FROM users WHERE username = $1`,
-			uname)
-		var hash string
-		row.Scan(&hash)
-
-		err := bcrypt.CompareHashAndPassword(
-			[]byte(hash), []byte(r.PostFormValue("oldpassword")))
-		if err != nil {
-			http.Redirect(w, r, "/profile?msg="+ErrMsgChangePasswordFail, http.StatusSeeOther)
+		if correctPassword(uname, r.PostFormValue("oldpassword")) {
+			http.Redirect(w, r, "/profile?msg="+ErrMsgVerifyPasswordFail, http.StatusSeeOther)
 			return
 		}
 
@@ -126,5 +118,43 @@ func doProfilePasswordUpdate(username, password string, prev string) (success bo
 		return false, prev+"?msg="+ErrMsgGeneric, http.StatusInternalServerError
 	} else {
 		return true, prev+"?msg="+MsgChangePasswordSuccess, http.StatusSeeOther
+	}
+}
+
+func profileDelete(w http.ResponseWriter, r *http.Request) {
+	if !isLoggedIn(w, r) {
+		http.Redirect(w, r, "/?msg="+ErrMsgNoSession, http.StatusSeeOther)
+		return
+	}
+
+	// GET -> return to profile
+	if r.Method == http.MethodGet {
+		http.Redirect(w, r, "/profile", http.StatusSeeOther)
+		return
+	}
+	
+	// POST -> process
+	if r.Method == http.MethodPost {
+		// compare password
+		uname := getJwtClaims(w, r).Username
+		if !correctPassword(uname, r.PostFormValue("password")) {
+			http.Redirect(w, r, "/profile?msg="+ErrMsgVerifyPasswordFail, http.StatusSeeOther)
+			return
+		}
+
+		// delete from db
+		_, err := db.Exec(`
+			DELETE FROM users WHERE username = $1`,
+			uname)
+		if err != nil {
+			http.Redirect(w, r, "/profile?msg="+ErrMsgDeleteFail, http.StatusSeeOther)
+			return
+		}
+
+		// destroy cookie
+		destroyJwtCookie(w, r)
+
+		// redirect to homepage
+		http.Redirect(w, r, "/?msg="+MsgDeleteSuccess, http.StatusSeeOther)
 	}
 }
