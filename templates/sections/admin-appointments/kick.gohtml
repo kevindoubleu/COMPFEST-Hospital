@@ -17,10 +17,49 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
-                <form action="/administration/kick" method="post">
-                    <input type="hidden" name="username" value="{{.Username}}">
-                    <button type="submit" class="btn btn-primary">Confirm</button>
-                </form>
+                <button id="kick-{{.Username}}" type="submit" class="btn btn-primary" data-bs-dismiss="modal">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- script for kicking patients ajax -->
+<script>
+    document.getElementById("kick-{{.Username}}").onclick = ajaxKick
+    function ajaxKick() {
+        var xhr = new XMLHttpRequest()
+        xhr.open("GET", "/administration/kick/{{.Username}}")
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status == 200) {
+                result = JSON.parse(xhr.responseText)
+                if (result.Ok) {
+                    // remove the table row
+                    document.getElementById("row-{{.Username}}").remove()
+                    // update the registrant count
+                    document.getElementById("registrant-count-{{.Appointment_id.Int64}}").innerHTML = result.Registrants
+                } else {
+                    document.getElementById("kickError{{.Username}}").click()
+                }
+            }
+        }
+        xhr.send()
+    }
+</script>
+
+<!-- error modal -->
+<button id="kickError{{.Username}}" type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#errorModal{{.Username}}" style="display: none;"></button>
+<div class="modal fade" id="errorModal{{.Username}}" tabindex="-1" aria-labelledby="errorModal{{.Username}}Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="kickError{{.Username}}Label">Error</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                An error occurred while trying to kick {{.Firstname}}.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
             </div>
         </div>
     </div>

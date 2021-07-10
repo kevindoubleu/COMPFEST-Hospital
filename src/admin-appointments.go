@@ -1,6 +1,7 @@
 package src
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 )
@@ -55,7 +56,7 @@ func administration(w http.ResponseWriter, r *http.Request) {
 	// get registrants of each appointment
 	for i, a := range details {
 		rows, err := db.Query(`
-			SELECT username, firstname, lastname, age, email
+			SELECT username, firstname, lastname, age, email, appointment_id
 			FROM users
 			JOIN appointments
 				ON appointment_id = appointments.id
@@ -66,7 +67,7 @@ func administration(w http.ResponseWriter, r *http.Request) {
 
 		for rows.Next() {
 			r := Patient{}
-			err := rows.Scan(&r.Username, &r.Firstname, &r.Lastname, &r.Age, &r.Email)
+			err := rows.Scan(&r.Username, &r.Firstname, &r.Lastname, &r.Age, &r.Email, &r.Appointment_id)
 			ErrPanic(err)
 			details[i].Registrants = append(details[i].Registrants, r)
 
@@ -130,16 +131,40 @@ func adminDelete(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/administration?msg="+MsgDeleteSuccess, http.StatusSeeOther)
 }
 
+// URL path is username
 func adminKick(w http.ResponseWriter, r *http.Request) {
+	username := r.URL.Path
+
+	type adminKickResponse struct {
+		Registrants int
+		Ok bool
+	}
+	resp := adminKickResponse{}
+
+	// calculate new registrant count on appointment
+	row := db.QueryRow(`
+		SELECT count(*)
+		FROM users
+		WHERE appointment_id = (
+			SELECT appointment_id FROM users WHERE username = $1)`,
+		username)
+	row.Scan(&resp.Registrants)
+	resp.Registrants -= 1
+
+	// kick the patient
 	_, err := db.Exec(`
 		UPDATE users
 		SET appointment_id = null
 		WHERE username = $1`,
-		r.PostFormValue("username"))
+		username)
 	if err != nil {
-		http.Redirect(w, r, "/administration?msg="+ErrMsgKickFail, http.StatusBadRequest)
+		json.NewEncoder(w).Encode(resp)
 		return
 	}
 
-	http.Redirect(w, r, "/administration?msg="+MsgKickSuccess, http.StatusSeeOther)
+	resp.Ok = true
+	err = json.NewEncoder(w).Encode(resp)
+	if err != nil {
+		log.Println("admin kick:", err)
+	}
 }

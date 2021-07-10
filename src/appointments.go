@@ -76,16 +76,18 @@ func appointments(w http.ResponseWriter, r *http.Request) {
 	tpl.ExecuteTemplate(w, "appointments.gohtml", data)
 }
 
-type appointmentApplyResponse struct {
-	Appointment_id int
-	Registrants int
-	Doctor string
-	Description string
-	Ok bool
-	ErrMsg string
-}
+// URL path is appointment_id
 func appointmentsApply(w http.ResponseWriter, r *http.Request) {
+	type appointmentApplyResponse struct {
+		Appointment_id int
+		Registrants int
+		Doctor string
+		Description string
+		Ok bool
+		ErrMsg string
+	}
 	resp := appointmentApplyResponse{}
+
 	apId, err := strconv.Atoi(r.URL.Path)
 	if err != nil {
 		json.NewEncoder(w).Encode(resp)
@@ -154,12 +156,12 @@ func appointmentsApply(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-type appointmentCancelResponse struct {
-	Appointment_id int
-	Registrants int
-	Ok bool
-}
 func appointmentsCancel(w http.ResponseWriter, r *http.Request) {
+	type appointmentCancelResponse struct {
+		Appointment_id int
+		Registrants int
+		Ok bool
+	}
 	resp := appointmentCancelResponse{}
 
 	// get patient username

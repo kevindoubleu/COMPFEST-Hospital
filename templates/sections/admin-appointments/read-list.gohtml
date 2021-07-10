@@ -17,7 +17,7 @@
                     <i class="bx bx-calendar icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-{{$k}}" class="collapsed">
                         {{$v.Appointment.Doctor}}
                         <div class="float-end">
-                            Booked {{$v.RegistrantsCount}}/{{$v.Appointment.Capacity}}
+                            Booked <span id="registrant-count-{{$v.Appointment.Id}}">{{$v.RegistrantsCount}}</span>/{{$v.Appointment.Capacity}}
                         </div>
                         <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i>
                     </a>
@@ -40,7 +40,7 @@
                             </thead>
                             <tbody>
                             {{range $i, $r := $v.Registrants}}
-                                <tr>
+                                <tr id="row-{{$r.Username}}">
                                     <th scope="row">{{inc $i}}</th>
                                     <td>{{$r.Firstname}}</td>
                                     <td>{{$r.Lastname}}</td>

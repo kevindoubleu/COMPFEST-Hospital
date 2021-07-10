@@ -26,13 +26,6 @@
     - [x] check if fully booked registrant (how many?)
   - [x] cancel an appointment
 
-###### Todo
-
-- ~~change "patients" table into "users" table with an additional "role" field~~
-  - ~~this adds the abilty to manually add more admin role accounts~~
-- ~~change "users" primary key to "username" instead of unnecessary field "id"~~
-- more specific text field types in "users" table
-
 ## timeline
 
 july 5
@@ -75,17 +68,25 @@ july 9
 - admins can cancel patient's applied appointment in appointment listing
 
 july 10
-- basic middlewares, adminonly, loggedinonly, loggedoutonly
+- basic middlewares
 - ajax for patient cancel
 - ajax for patient apply
 - modal for ajax reply messages
+- ajax for admin kicking patients from appointments
 
 planned features
-- ajax for admin kicking patients from appointments
 - ajax for admin appointment update, delete
 - ajax for admin editing patient data
 - appointments can hold pictures data
 - appointment pics are showed in patient's appointment listing
-- package into mvc model
 - admins can assign patients to appointments
 - admins can cancel patient's appointment from `/administration/patients`
+
+### mistakes
+
+- must've started with a design pattern in mind, for example: MVC
+- must've designed RESTful APIs / microservice style APIs (?) for easier AJAX stuff, instead of using POST forms
+- must've used a more general template where I understand the deps, or make 1 myself, couldn't use toasts with this template for some reason
+- must've used sessions (instead of jwt, but that's a requirement in this project)
+
+would love to get another project like this where I could correct my mistakes

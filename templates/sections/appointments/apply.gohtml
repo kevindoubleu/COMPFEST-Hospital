@@ -29,8 +29,6 @@
     function ajaxCancel() {
         var xhr = new XMLHttpRequest()
         xhr.open("GET", "/appointments/apply/{{.Id}}")
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-        // cookies are included
         xhr.onreadystatechange = () => {
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status == 200) {
                 let result = JSON.parse(xhr.responseText)

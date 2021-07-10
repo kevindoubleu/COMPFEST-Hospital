@@ -83,7 +83,6 @@
     function ajaxCancel() {
         var xhr = new XMLHttpRequest()
         xhr.open("GET", "/appointments/cancel")
-        // cookies are included
         xhr.onreadystatechange = () => {
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status == 200) {
                 let result = JSON.parse(xhr.responseText)

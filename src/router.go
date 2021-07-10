@@ -41,8 +41,9 @@ func Start() {
 		AdminOnly(PostOnly(http.HandlerFunc(adminUpdate))))
 	http.Handle("/administration/delete",
 		AdminOnly(PostOnly(http.HandlerFunc(adminDelete))))
-	http.Handle("/administration/kick",
-		AdminOnly(PostOnly(http.HandlerFunc(adminKick))))
+	http.Handle("/administration/kick/",
+		AdminOnly(GetOnly(http.StripPrefix("/administration/kick/",
+		http.HandlerFunc(adminKick)))))
 
 	http.Handle("/administration/patients",
 		AdminOnly(GetOnly(http.HandlerFunc(patients))))
