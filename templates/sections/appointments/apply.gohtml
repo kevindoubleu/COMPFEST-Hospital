@@ -1,6 +1,6 @@
 {{define "appointment-apply"}}
 <!-- Button trigger modal -->
-<button type="button" class="appointment-apply-btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#applyModal{{.Id}}">
+<button id="appointment-apply-btn-{{.Id}}" type="button" class="appointment-apply-btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#applyModal{{.Id}}">
     Apply
 </button>
 
@@ -23,6 +23,7 @@
     </div>
 </div>
 
+<!-- script for appointment applying ajax -->
 <script>
     document.getElementById("apply-appointment-{{.Id}}").onclick = ajaxCancel
     function ajaxCancel() {
@@ -49,10 +50,38 @@
                     // edit registrant count on registered appointment
                     registrantCountId = "registrant-count-" + result.Appointment_id
                     document.getElementById(registrantCountId).innerHTML = result.Registrants
+                } else {
+                    // show modal with error msg
+                    document.getElementById("errorApplyModalContent{{.Id}}").innerHTML = result.ErrMsg
+                    document.getElementById("applyErrorModalBtn{{.Id}}").click()
+
+                    // disable apply button
+                    document.getElementById("appointment-apply-btn-{{.Id}}").disabled = true
+                    document.getElementById("appointment-apply-btn-{{.Id}}").innerHTML = "Unavailable"
                 }
             }
         }
         xhr.send()
     }
 </script>
+
+<!-- modal for applying error msg -->
+<button id="applyErrorModalBtn{{.Id}}" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#applyErrorModal{{.Id}}" style="display: none;"></button>
+<div class="modal fade" id="applyErrorModal{{.Id}}" tabindex="-1" aria-labelledby="applyErrorModal{{.Id}}Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="applyErrorModal{{.Id}}Label">Error</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="errorApplyModalContent{{.Id}}">
+                Error msg
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+  
 {{end}}

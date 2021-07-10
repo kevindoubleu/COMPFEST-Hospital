@@ -82,6 +82,7 @@ type appointmentApplyResponse struct {
 	Doctor string
 	Description string
 	Ok bool
+	ErrMsg string
 }
 func appointmentsApply(w http.ResponseWriter, r *http.Request) {
 	resp := appointmentApplyResponse{}
@@ -119,6 +120,7 @@ func appointmentsApply(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println("select db error", err)
 		}
+		resp.ErrMsg = ErrMsgApplyFail[:len(ErrMsgApplyFail)-len(toastFail)]
 		json.NewEncoder(w).Encode(resp)
 		return
 	}

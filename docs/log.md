@@ -78,6 +78,7 @@ july 10
 - basic middlewares, adminonly, loggedinonly, loggedoutonly
 - ajax for patient cancel
 - ajax for patient apply
+- modal for ajax reply messages
 
 planned features
 - ajax for admin kicking patients from appointments
