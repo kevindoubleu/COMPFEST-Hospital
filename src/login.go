@@ -12,11 +12,6 @@ func init() {
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
-	if isLoggedIn(w, r) {
-		http.Redirect(w, r, "/?msg="+ErrMsgHasSession, http.StatusUnauthorized)
-		return
-	}
-	
 	// GET -> give form
 	if r.Method == http.MethodGet {
 		tpl.ExecuteTemplate(w, "login.gohtml", nil)

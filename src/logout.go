@@ -3,11 +3,6 @@ package src
 import "net/http"
 
 func logout(w http.ResponseWriter, r *http.Request) {
-	if !isLoggedIn(w, r) {
-		http.Redirect(w, r, "/?msg="+ErrMsgNoSession, http.StatusUnauthorized)
-		return
-	}
-
 	// destroy cookie
 	destroyJwtCookie(w, r)
 	// SECURITY NOTICE: if cookie is not deleted on client side,

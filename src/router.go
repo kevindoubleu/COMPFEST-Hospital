@@ -12,26 +12,43 @@ func Start() {
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
 
 	http.HandleFunc("/", homepage)
-	http.HandleFunc("/register", register)
-	http.HandleFunc("/login", login)
-	http.HandleFunc("/logout", logout)
-	http.HandleFunc("/profile", profile)
-	http.HandleFunc("/profile/password", profilePassword)
-	http.HandleFunc("/profile/delete", profileDelete)
+	http.Handle("/register",
+		LoggedOutOnly(http.HandlerFunc(register)))
+	http.Handle("/login",
+		LoggedOutOnly(http.HandlerFunc(login)))
+	http.Handle("/logout",
+		LoggedInOnly(http.HandlerFunc(logout)))
+	http.Handle("/profile",
+		LoggedInOnly(http.HandlerFunc(profile)))
+	http.Handle("/profile/password",
+		LoggedInOnly(PostOnly(http.HandlerFunc(profilePassword))))
+	http.Handle("/profile/delete",
+		LoggedInOnly(PostOnly(http.HandlerFunc(profileDelete))))
 
-	http.HandleFunc("/appointments", appointments)
-	http.HandleFunc("/appointments/apply", appointmentsApply)
-	http.HandleFunc("/appointments/cancel", appointmentsCancel)
+	http.Handle("/appointments",
+		LoggedInOnly(GetOnly(http.HandlerFunc(appointments))))
+	http.Handle("/appointments/apply",
+		LoggedInOnly(PostOnly(http.HandlerFunc(appointmentsApply))))
+	http.Handle("/appointments/cancel",
+		LoggedInOnly(GetOnly(http.HandlerFunc(appointmentsCancel))))
 
-	http.HandleFunc("/administration", administration)
-	http.HandleFunc("/administration/create", adminCreate)
-	http.HandleFunc("/administration/update", adminUpdate)
-	http.HandleFunc("/administration/delete", adminDelete)
-	http.HandleFunc("/administration/kick", adminKick)
+	http.Handle("/administration",
+		AdminOnly(GetOnly(http.HandlerFunc(administration))))
+	http.Handle("/administration/create",
+		AdminOnly(PostOnly(http.HandlerFunc(adminCreate))))
+	http.Handle("/administration/update",
+		AdminOnly(PostOnly(http.HandlerFunc(adminUpdate))))
+	http.Handle("/administration/delete",
+		AdminOnly(PostOnly(http.HandlerFunc(adminDelete))))
+	http.Handle("/administration/kick",
+		AdminOnly(PostOnly(http.HandlerFunc(adminKick))))
 
-	http.HandleFunc("/administration/patients", patients)
-	http.HandleFunc("/administration/patients/create", patientsCreate)
-	http.HandleFunc("/administration/patients/update", patientsUpdate)
+	http.Handle("/administration/patients",
+		AdminOnly(GetOnly(http.HandlerFunc(patients))))
+	http.Handle("/administration/patients/create",
+		AdminOnly(PostOnly(http.HandlerFunc(patientsCreate))))
+	http.Handle("/administration/patients/update",
+		AdminOnly(PostOnly(http.HandlerFunc(patientsUpdate))))
 
 	n := negroni.Classic()
 	n.Use(negroni.NewLogger())

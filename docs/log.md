@@ -73,3 +73,6 @@ july 9
 - admin update on patient password
 - user profile delete
 - admins can cancel patient's applied appointment in appointment listing
+
+july 10
+- basic middlewares, adminonly, loggedinonly, loggedoutonly

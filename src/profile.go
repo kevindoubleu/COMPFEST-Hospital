@@ -8,11 +8,6 @@ import (
 )
 
 func profile(w http.ResponseWriter, r *http.Request) {
-	if !isLoggedIn(w, r) {
-		http.Redirect(w, r, "/?msg="+ErrMsgNoSession, http.StatusUnauthorized)
-		return
-	}
-
 	// GET -> give form
 	if r.Method == http.MethodGet {
 		// get user data from db
@@ -77,11 +72,6 @@ func doProfileUpdate(newUser Patient, prev string) (success bool, url string, co
 }
 
 func profilePassword(w http.ResponseWriter, r *http.Request) {
-	if !isLoggedIn(w, r) {
-		http.Redirect(w, r, "/?msg="+ErrMsgNoSession, http.StatusUnauthorized)
-		return
-	}
-
 	// GET -> return to profile
 	if r.Method == http.MethodGet {
 		http.Redirect(w, r, "/profile", http.StatusMethodNotAllowed)
@@ -122,11 +112,6 @@ func doProfilePasswordUpdate(username, password string, prev string) (success bo
 }
 
 func profileDelete(w http.ResponseWriter, r *http.Request) {
-	if !isLoggedIn(w, r) {
-		http.Redirect(w, r, "/?msg="+ErrMsgNoSession, http.StatusUnauthorized)
-		return
-	}
-
 	// GET -> return to profile
 	if r.Method == http.MethodGet {
 		http.Redirect(w, r, "/profile", http.StatusMethodNotAllowed)
