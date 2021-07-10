@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type AppointmentSummary struct {
@@ -75,64 +76,86 @@ func appointments(w http.ResponseWriter, r *http.Request) {
 	tpl.ExecuteTemplate(w, "appointments.gohtml", data)
 }
 
+type appointmentApplyResponse struct {
+	Appointment_id int
+	Registrants int
+	Doctor string
+	Description string
+	Ok bool
+}
 func appointmentsApply(w http.ResponseWriter, r *http.Request) {
+	resp := appointmentApplyResponse{}
+	apId, err := strconv.Atoi(r.URL.Path)
+	if err != nil {
+		json.NewEncoder(w).Encode(resp)
+		return
+	}
+	resp.Appointment_id = apId
+
 	// check if user is not already booked to any appointment
 	uname := getJwtClaims(w, r).Username
 	row := db.QueryRow(`
-		SELECT
-		(SELECT appointment_id FROM users WHERE username = $1) = null`,
+		SELECT appointment_id FROM users WHERE username = $1`,
 		uname)
 	var id sql.NullInt64
 	row.Scan(&id)
 	if id.Valid {
-		http.Redirect(w, r, "/appointments?msg="+ErrMsgApplyFail, http.StatusBadRequest)
+		json.NewEncoder(w).Encode(resp)
 		return
 	}
 
 	// check if full
 	row = db.QueryRow(`
-		SELECT
-		(
-			SELECT count(*)
-			FROM users
-			JOIN appointments
-				ON appointment_id = appointments.id
-			WHERE appointment_id = $1
-		) < (
-			SELECT capacity
-			FROM appointments
-			WHERE id = $1
-		)`,
-		r.PostFormValue("id"))
-	var available bool
-	err := row.Scan(&available)
-	if err != nil || !available {
+		SELECT count(users.*), capacity
+		FROM appointments
+		LEFT JOIN users
+			ON appointments.id = appointment_id
+		WHERE id = $1
+		GROUP BY capacity`,
+		apId)
+	var current, max int
+	err = row.Scan(&current, &max)
+	if err != nil || current >= max {
 		if err != nil {
 			log.Println("select db error", err)
 		}
-		http.Redirect(w, r, "/appointments?msg="+ErrMsgApplyFail, http.StatusBadRequest)
+		json.NewEncoder(w).Encode(resp)
 		return
 	}
+	resp.Registrants = current+1
 
 	// assign the patient to the appointment
 	_, err = db.Exec(`
 		UPDATE users
 		SET appointment_id = $1
 		WHERE username = $2`,
-		r.PostFormValue("id"),
+		apId,
 		uname)
 	if err != nil {
-		http.Redirect(w, r, "/appointments?msg="+ErrMsgApplyFail, http.StatusBadRequest)
+		json.NewEncoder(w).Encode(resp)
 		return
 	}
 
-	http.Redirect(w, r, "/appointments?msg="+MsgApplySuccess, http.StatusSeeOther)
+	// get the doctor and description to show
+	row = db.QueryRow(`
+		SELECT doctor, description
+		FROM appointments
+		WHERE id = $1`,
+		apId)
+	row.Scan(&resp.Doctor, &resp.Description)
+
+	// set the response ok and send
+	resp.Ok = true
+	err = json.NewEncoder(w).Encode(resp)
+	if err != nil {
+		log.Println("appointment apply:", err)
+	}
 }
 
 type appointmentCancelResponse struct {
-	Ok bool
 	Appointment_id int
 	Registrants int
+	Ok bool
 }
 func appointmentsCancel(w http.ResponseWriter, r *http.Request) {
 	resp := appointmentCancelResponse{}
@@ -165,11 +188,12 @@ func appointmentsCancel(w http.ResponseWriter, r *http.Request) {
 		patientUsername)
 	if err != nil {
 		log.Println("update db error:", err)
+		json.NewEncoder(w).Encode(resp)
 		return
-	} else {
-		resp.Ok = true
 	}
-
+	
+	// set the response ok and send
+	resp.Ok = true
 	err = json.NewEncoder(w).Encode(resp)
 	if err != nil {
 		log.Println("appointment cancel:", err)

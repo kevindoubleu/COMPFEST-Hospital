@@ -19,7 +19,7 @@
                         My Appointment
                     </p>
                     <div class="row">
-                        <div id="faq-list-mine" class="collapse show" data-bs-parent=".faq-list">
+                        <div id="faq-list-mine" data-bs-parent=".faq-list">
                             <p id="my-appointment-doctor">
                                 {{if .MyAppointment.Doctor}}
                                 {{.MyAppointment.Doctor}}
@@ -37,48 +37,23 @@
                         {{template "appointment-cancel" .MyAppointment.Doctor}}
                     </div>
                 </li>
-                {{if .MyAppointment.Doctor}}
-                    {{range $k, $v := .AppointmentSummaries}}
-                    <li data-aos="fade-up" data-aos-delay="{{$k}}00">
-                        <i class="bx bx-calendar icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-{{$k}}" class="collapsed">
-                            {{$v.Appointment.Doctor}}
-                            <div class="float-end">
-                                Booked <span id="registrant-count-{{.Id}}">{{$v.RegistrantsCount}}</span>/{{$v.Appointment.Capacity}}
-                            </div>
-                            <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i>
-                        </a>
-                        <div id="faq-list-{{$k}}" class="collapse" data-bs-parent=".faq-list">
-                            <p>
-                                {{$v.Appointment.Description}}
-                            </p>
+                {{range $k, $v := .AppointmentSummaries}}
+                <li data-aos="fade-up" data-aos-delay="{{$k}}00">
+                    <i class="bx bx-calendar icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-{{$k}}" class="collapsed">
+                        {{$v.Appointment.Doctor}}
+                        <div class="float-end">
+                            Booked <span id="registrant-count-{{.Id}}">{{$v.RegistrantsCount}}</span>/{{$v.Appointment.Capacity}}
                         </div>
-                    </li>
-                    {{end}}
-                {{else}}
-                    {{range $k, $v := .AppointmentSummaries}}
-                    <li data-aos="fade-up" data-aos-delay="{{$k}}00">
-                        <i class="bx bx-calendar icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-{{$k}}" class="collapsed">
-                            {{$v.Appointment.Doctor}}
-                            <div class="float-end">
-                                Booked <span id="registrant-count-{{.Id}}">{{$v.RegistrantsCount}}</span>/{{$v.Appointment.Capacity}}
-                            </div>
-                            <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i>
-                        </a>
-                        <div id="faq-list-{{$k}}" class="collapse" data-bs-parent=".faq-list">
-                            <p>
-                                {{$v.Appointment.Description}}
-                            </p>
-                            <hr>
-                            {{if lt $v.RegistrantsCount $v.Appointment.Capacity}}
-                                {{template "appointment-apply" $v.Appointment}}
-                            {{else}}
-                                <button type="button" class="btn btn-primary" disabled>
-                                    Full
-                                </button>
-                            {{end}}
-                        </div>
-                    </li>
-                    {{end}}
+                        <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i>
+                    </a>
+                    <div id="faq-list-{{$k}}" class="collapse" data-bs-parent=".faq-list">
+                        <p>
+                            {{$v.Appointment.Description}}
+                        </p>
+                        <hr class="appointment-apply-btn">
+                        {{template "appointment-apply" $v.Appointment}}
+                    </div>
+                </li>
                 {{end}}
             </ul>
         </div>
@@ -91,7 +66,14 @@
     // {{if not .MyAppointment.Doctor}}
     document.getElementById("my-appointment-cancel-btn").style.display = "none"
     // {{end}}
-    // show if registered
+
+    // hide apply buttons if registered
+    // {{if .MyAppointment.Doctor}}
+    buttons = document.getElementsByClassName("appointment-apply-btn")
+    for (let btn of buttons) {
+        btn.style.display = "none"
+    }
+    // {{end}}
 
     notRegistered = "You are currently not registered to any appointments, \
         feel free to pick one from the list below."
@@ -105,19 +87,24 @@
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status == 200) {
                 let result = JSON.parse(xhr.responseText)
                 if (result.Ok) {
+                    // edit my appointment
                     document.getElementById("my-appointment-doctor").innerHTML = notRegistered
                     document.getElementById("my-appointment-description").innerHTML = ""
                     document.getElementById("my-appointment-cancel-btn").style.display = "none"
 
+                    // edit apply buttons on other appointments
+                    buttons = document.getElementsByClassName("appointment-apply-btn")
+                    for (let btn of buttons) {
+                        btn.style.display = "block"
+                    }
+
+                    // edit registrant count on previously registered appointment
                     registrantCountId = "registrant-count-" + result.Appointment_id
-                    console.log(registrantCountId)
                     document.getElementById(registrantCountId).innerHTML = result.Registrants
                 }
             }
         }
         xhr.send()
     }
-
-
 </script>
 {{end}}

@@ -27,8 +27,9 @@ func Start() {
 
 	http.Handle("/appointments",
 		LoggedInOnly(GetOnly(http.HandlerFunc(appointments))))
-	http.Handle("/appointments/apply",
-		LoggedInOnly(PostOnly(http.HandlerFunc(appointmentsApply))))
+	http.Handle("/appointments/apply/",
+		LoggedInOnly(GetOnly(http.StripPrefix("/appointments/apply/",
+		http.HandlerFunc(appointmentsApply)))))
 	http.Handle("/appointments/cancel",
 		LoggedInOnly(GetOnly(http.HandlerFunc(appointmentsCancel))))
 

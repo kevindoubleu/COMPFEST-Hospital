@@ -1,6 +1,6 @@
 {{define "appointment-apply"}}
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#applyModal{{.Id}}">
+<button type="button" class="appointment-apply-btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#applyModal{{.Id}}">
     Apply
 </button>
 
@@ -17,12 +17,42 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <form action="/appointments/apply" method="post">
-                    <input type="hidden" name="id" value="{{.Id}}">
-                    <button type="submit" class="btn btn-success">Confirm</button>
-                </form>
+                <button id="apply-appointment-{{.Id}}" type="submit" class="btn btn-success" data-bs-dismiss="modal">Confirm</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById("apply-appointment-{{.Id}}").onclick = ajaxCancel
+    function ajaxCancel() {
+        var xhr = new XMLHttpRequest()
+        xhr.open("GET", "/appointments/apply/{{.Id}}")
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+        // cookies are included
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status == 200) {
+                let result = JSON.parse(xhr.responseText)
+                if (result.Ok) {
+                    // edit my appointment
+                    document.getElementById("my-appointment-doctor").innerText = result.Doctor
+                    document.getElementById("my-appointment-description").innerHTML = result.Description
+                    document.getElementById("my-appointment-cancel-btn").style.display = "block"
+                    document.getElementById("faq-list-mine").style.display = "block"
+
+                    // edit apply button on other appointments
+                    buttons = document.getElementsByClassName("appointment-apply-btn")
+                    for (let btn of buttons) {
+                        btn.style.display = "none"
+                    }
+
+                    // edit registrant count on registered appointment
+                    registrantCountId = "registrant-count-" + result.Appointment_id
+                    document.getElementById(registrantCountId).innerHTML = result.Registrants
+                }
+            }
+        }
+        xhr.send()
+    }
+</script>
 {{end}}

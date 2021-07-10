@@ -77,9 +77,9 @@ july 9
 july 10
 - basic middlewares, adminonly, loggedinonly, loggedoutonly
 - ajax for patient cancel
+- ajax for patient apply
 
 planned features
-- ajax for patient apply
 - ajax for admin kicking patients from appointments
 - ajax for admin appointment update, delete
 - ajax for admin editing patient data
