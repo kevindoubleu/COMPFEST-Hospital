@@ -5,7 +5,7 @@ import "net/http"
 func AdminOnly(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !isAdmin(w, r) {
-			http.Redirect(w, r, "/login", http.StatusUnauthorized)
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
 		next.ServeHTTP(w, r)
@@ -15,7 +15,8 @@ func AdminOnly(next http.Handler) http.Handler {
 func LoggedInOnly(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !isLoggedIn(w, r) {
-			http.Redirect(w, r, "/login?msg="+ErrMsgNoSession, http.StatusUnauthorized)
+			http.Redirect(w, r, "/login?msg="+ErrMsgNoSession, http.StatusSeeOther)
+			// http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
 		refreshSession(w, r)
@@ -26,7 +27,8 @@ func LoggedInOnly(next http.Handler) http.Handler {
 func LoggedOutOnly(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if isLoggedIn(w, r) {
-			http.Redirect(w, r, "/?msg="+ErrMsgHasSession, http.StatusUnauthorized)
+			http.Redirect(w, r, "/?msg="+ErrMsgHasSession, http.StatusSeeOther)
+			// http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
 		next.ServeHTTP(w, r)
@@ -36,7 +38,7 @@ func LoggedOutOnly(next http.Handler) http.Handler {
 func GetOnly(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
-			http.Redirect(w, r, "/", http.StatusMethodNotAllowed)
+			http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 			return
 		}
 		next.ServeHTTP(w, r)
@@ -46,7 +48,7 @@ func GetOnly(next http.Handler) http.Handler {
 func PostOnly(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
-			http.Redirect(w, r, "/", http.StatusMethodNotAllowed)
+			http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 			return
 		}
 		next.ServeHTTP(w, r)

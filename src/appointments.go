@@ -2,6 +2,7 @@ package src
 
 import (
 	"database/sql"
+	"encoding/json"
 	"log"
 	"net/http"
 )
@@ -128,9 +129,33 @@ func appointmentsApply(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/appointments?msg="+MsgApplySuccess, http.StatusSeeOther)
 }
 
+type appointmentCancelResponse struct {
+	Ok bool
+	Appointment_id int
+	Registrants int
+}
 func appointmentsCancel(w http.ResponseWriter, r *http.Request) {
+	resp := appointmentCancelResponse{}
+
 	// get patient username
 	patientUsername := getJwtClaims(w, r).Username
+
+	// get old appointment id
+	row := db.QueryRow(`
+		SELECT appointment_id FROM users WHERE username = $1`,
+		patientUsername)
+	row.Scan(&resp.Appointment_id)
+
+	// count new registrant
+	row = db.QueryRow(`
+		SELECT count(*)
+		FROM users
+		JOIN appointments
+			ON appointment_id = appointments.id
+		WHERE appointment_id = $1`,
+		resp.Appointment_id)
+	row.Scan(&resp.Registrants)
+	resp.Registrants -= 1
 
 	// update in db
 	_, err := db.Exec(`
@@ -140,9 +165,13 @@ func appointmentsCancel(w http.ResponseWriter, r *http.Request) {
 		patientUsername)
 	if err != nil {
 		log.Println("update db error:", err)
-		http.Redirect(w, r, "/appointments?msg="+ErrMsgCancelFail, http.StatusBadRequest)
 		return
+	} else {
+		resp.Ok = true
 	}
 
-	http.Redirect(w, r, "/appointments?msg="+MsgCancelSuccess, http.StatusSeeOther)
+	err = json.NewEncoder(w).Encode(resp)
+	if err != nil {
+		log.Println("appointment cancel:", err)
+	}
 }

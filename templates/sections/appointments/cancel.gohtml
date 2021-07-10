@@ -1,7 +1,7 @@
 {{define "appointment-cancel"}}
 <!-- Button trigger modal -->
 <div>
-    <button type="button" class="btn btn-danger float-end" data-bs-toggle="modal" data-bs-target="#cancelModal">
+    <button id="my-appointment-cancel-btn" type="button" class="btn btn-danger float-end" data-bs-toggle="modal" data-bs-target="#cancelModal">
         Cancel
     </button>
 </div>
@@ -20,9 +20,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <a href="/appointments/cancel" class="no-padding">
-                    <button type="button" class="btn btn-danger float-end">Confirm</button>
-                </a>
+                <button id="cancel-my-appointment-ajax" type="button" class="btn btn-danger float-end" data-bs-dismiss="modal">
+                    Confirm
+                </button>
             </div>
         </div>
     </div>

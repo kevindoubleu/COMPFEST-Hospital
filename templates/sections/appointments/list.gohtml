@@ -13,30 +13,37 @@
 
         <div class="faq-list">
             <ul>
-                {{if .MyAppointment.Doctor}}
-                    <li>
-                        <i class="bx bx-alarm icon-help"></i>
-                        <p class="faq-title">
-                            My Appointment
-                        </p>
-                        <div class="row">
-                            <div id="faq-list-mine" class="collapse show" data-bs-parent=".faq-list">
-                                <p>
-                                    {{.MyAppointment.Doctor}}
-                                </p>
-                                <p>
-                                    {{.MyAppointment.Description}}
-                                </p>
-                            </div>
-                            {{template "appointment-cancel" .MyAppointment.Doctor}}
+                <li>
+                    <i class="bx bx-alarm icon-help"></i>
+                    <p class="faq-title">
+                        My Appointment
+                    </p>
+                    <div class="row">
+                        <div id="faq-list-mine" class="collapse show" data-bs-parent=".faq-list">
+                            <p id="my-appointment-doctor">
+                                {{if .MyAppointment.Doctor}}
+                                {{.MyAppointment.Doctor}}
+                                {{else}}
+                                You are currently not registered to any appointments,
+                                feel free to pick one from the list below.
+                                {{end}}
+                            </p>
+                            <p id="my-appointment-description">
+                                {{if .MyAppointment.Description}}
+                                {{.MyAppointment.Description}}
+                                {{end}}
+                            </p>
                         </div>
-                    </li>
+                        {{template "appointment-cancel" .MyAppointment.Doctor}}
+                    </div>
+                </li>
+                {{if .MyAppointment.Doctor}}
                     {{range $k, $v := .AppointmentSummaries}}
                     <li data-aos="fade-up" data-aos-delay="{{$k}}00">
                         <i class="bx bx-calendar icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-{{$k}}" class="collapsed">
                             {{$v.Appointment.Doctor}}
                             <div class="float-end">
-                                Booked {{$v.RegistrantsCount}}/{{$v.Appointment.Capacity}}
+                                Booked <span id="registrant-count-{{.Id}}">{{$v.RegistrantsCount}}</span>/{{$v.Appointment.Capacity}}
                             </div>
                             <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i>
                         </a>
@@ -53,7 +60,7 @@
                         <i class="bx bx-calendar icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-{{$k}}" class="collapsed">
                             {{$v.Appointment.Doctor}}
                             <div class="float-end">
-                                Booked {{$v.RegistrantsCount}}/{{$v.Appointment.Capacity}}
+                                Booked <span id="registrant-count-{{.Id}}">{{$v.RegistrantsCount}}</span>/{{$v.Appointment.Capacity}}
                             </div>
                             <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i>
                         </a>
@@ -78,4 +85,39 @@
 
     </div>
 </section><!-- End Frequently Asked Questions Section -->
+
+<script>
+    // hide cancel button if not registered
+    // {{if not .MyAppointment.Doctor}}
+    document.getElementById("my-appointment-cancel-btn").style.display = "none"
+    // {{end}}
+    // show if registered
+
+    notRegistered = "You are currently not registered to any appointments, \
+        feel free to pick one from the list below."
+
+    document.getElementById("cancel-my-appointment-ajax").onclick = ajaxCancel
+    function ajaxCancel() {
+        var xhr = new XMLHttpRequest()
+        xhr.open("GET", "/appointments/cancel")
+        // cookies are included
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status == 200) {
+                let result = JSON.parse(xhr.responseText)
+                if (result.Ok) {
+                    document.getElementById("my-appointment-doctor").innerHTML = notRegistered
+                    document.getElementById("my-appointment-description").innerHTML = ""
+                    document.getElementById("my-appointment-cancel-btn").style.display = "none"
+
+                    registrantCountId = "registrant-count-" + result.Appointment_id
+                    console.log(registrantCountId)
+                    document.getElementById(registrantCountId).innerHTML = result.Registrants
+                }
+            }
+        }
+        xhr.send()
+    }
+
+
+</script>
 {{end}}

@@ -76,3 +76,15 @@ july 9
 
 july 10
 - basic middlewares, adminonly, loggedinonly, loggedoutonly
+- ajax for patient cancel
+
+planned features
+- ajax for patient apply
+- ajax for admin kicking patients from appointments
+- ajax for admin appointment update, delete
+- ajax for admin editing patient data
+- appointments can hold pictures data
+- appointment pics are showed in patient's appointment listing
+- package into mvc model
+- admins can assign patients to appointments
+- admins can cancel patient's appointment from `/administration/patients`
