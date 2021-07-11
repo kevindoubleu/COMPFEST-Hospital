@@ -1,6 +1,9 @@
 package src
 
-import "net/http"
+import (
+	"log"
+	"net/http"
+)
 
 func AdminOnly(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -51,6 +54,13 @@ func PostOnly(next http.Handler) http.Handler {
 			http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 			return
 		}
+		next.ServeHTTP(w, r)
+	})
+}
+
+func Log(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Println(r.Method, r.URL)
 		next.ServeHTTP(w, r)
 	})
 }

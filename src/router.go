@@ -4,8 +4,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/urfave/negroni"
 )
 
 func Start() {
@@ -52,17 +50,15 @@ func Start() {
 	http.Handle("/administration/patients/update",
 		AdminOnly(PostOnly(http.HandlerFunc(patientsUpdate))))
 
-	n := negroni.Classic()
-	n.Use(negroni.NewLogger())
-	n.UseHandler(http.DefaultServeMux)
+	loggedRouter := Log(http.DefaultServeMux)
 	
 	log.Printf("starting server")
 	port := os.Getenv("PORT")
 	if port == "" {
 		// local
-		log.Fatal(http.ListenAndServe(":8080", n))
+		log.Fatal(http.ListenAndServe(":8080", loggedRouter))
 	} else {
 		// heroku
-		log.Fatal(http.ListenAndServe(":"+port, n))
+		log.Fatal(http.ListenAndServe(":"+port, loggedRouter))
 	}
 }

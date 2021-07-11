@@ -56,6 +56,26 @@ This project has a [detailed documentation here](docs/spec.md), made conforming 
 
 ___
 
+###### Mistakes made
+
+- must've started with a design pattern in mind, for example: MVC
+- must've designed RESTful APIs / microservice style APIs (?) for easier AJAX stuff, instead of using POST forms
+- must've used a more general template where I understand the deps, or make 1 myself, couldn't use toasts with this template for some reason
+- must've used sessions (instead of jwt, but that's a requirement in this project)
+- must've gone with a more "struct oriented" approach, with methods instead of regular functions, bcs i didn't do this, i had to edit filenames to (barely) control go's compilation order
+
+would love to get another project like this where I could correct my mistakes
+
+###### Questions
+
+Along making this project, I come accross some questions I hope to ask in the academy
+
+- how to deal with not liking frontend? (i wanna be a backend sofeng, not fullstack)
+- exactly how expensive is a DB query?
+- should everything be AJAX?
+  - how much AJAX is too much AJAX?
+- where are you supposed to write js code? especially AJAX related stuff, especially within templates (in this project, i wrote them in the templates just under the html element they're responsible for)
+
 ###### Footnotes
 
 I hope the frontend part is acceptable, I suck at it, but I really want to get in the academy though so I packed this with as many backend features as I can think of. Also I only knew about this event 1 week prior to the registration deadline :')
