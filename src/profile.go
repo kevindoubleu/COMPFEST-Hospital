@@ -123,7 +123,7 @@ func profileDelete(w http.ResponseWriter, r *http.Request) {
 		// compare password
 		uname := getJwtClaims(w, r).Username
 		if !correctPassword(uname, r.PostFormValue("password")) {
-			http.Redirect(w, r, "/profile?msg="+ErrMsgVerifyPasswordFail, http.StatusBadRequest)
+			http.Redirect(w, r, "/profile?msg="+ErrMsgVerifyPasswordFail, http.StatusSeeOther)
 			return
 		}
 
@@ -132,7 +132,7 @@ func profileDelete(w http.ResponseWriter, r *http.Request) {
 			DELETE FROM users WHERE username = $1`,
 			uname)
 		if err != nil {
-			http.Redirect(w, r, "/profile?msg="+ErrMsgDeleteFail, http.StatusBadRequest)
+			http.Redirect(w, r, "/profile?msg="+ErrMsgDeleteFail, http.StatusSeeOther)
 			return
 		}
 

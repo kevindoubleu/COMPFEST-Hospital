@@ -74,10 +74,12 @@ july 10
 - modal for ajax reply messages
 - ajax for admin kicking patients from appointments
 
+july 11
+- appointments can have pictures
+
 planned features
 - ajax for admin appointment update, delete
 - ajax for admin editing patient data
-- appointments can hold pictures data
 - appointment pics are showed in patient's appointment listing
 - admins can assign patients to appointments
 - admins can cancel patient's appointment from `/administration/patients`

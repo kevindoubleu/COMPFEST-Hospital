@@ -2,6 +2,8 @@ package src
 
 import (
 	"database/sql"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 
@@ -51,8 +53,19 @@ func initDB() *sql.DB {
 	}
 	log.Println("successfully connected to db")
 
-	// init the actual db
-	_, err = db.Exec(`DROP TABLE IF EXISTS appointments CASCADE`)
+	initTables(db)
+
+	initRecords(db)
+
+	testQuery(db)
+
+	log.Println("initialized database", db)
+	return db
+}
+
+// tables: appointments, users
+func initTables(db *sql.DB) {
+	_, err := db.Exec(`DROP TABLE IF EXISTS appointments CASCADE`)
 	ErrPanic(err)
 	_, err = db.Exec(`
 		CREATE TABLE appointments(
@@ -63,6 +76,9 @@ func initDB() *sql.DB {
 		)
 	`)
 	ErrPanic(err)
+
+	// we can add more admins in the future
+	// and we can revoke admin rights by setting admin to false
 	_, err = db.Exec(`DROP TABLE IF EXISTS users`)
 	ErrPanic(err)
 	_, err = db.Exec(`
@@ -78,15 +94,28 @@ func initDB() *sql.DB {
 		)
 	`)
 	ErrPanic(err)
-	// we can add more admins in the future
-	// and we can revoke admin rights by setting admin to false
 
+	// appointment images
+	_, err = db.Exec(`DROP TABLE IF EXISTS images`)
+	ErrPanic(err)
+	_, err = db.Exec(`
+		CREATE TABLE images(
+			id             SERIAL PRIMARY KEY,
+			appointment_id INT references appointments(id) NOT NULL,
+			img            BYTEA NOT NULL
+		)
+	`)
+	ErrPanic(err)
+}
+
+// creates 1 admin, and some dummy records
+func initRecords(db *sql.DB) {
 	// default admin superuser
 	hash, _ := bcrypt.GenerateFromPassword(
 		[]byte("compfesthospitaladmin"),
 		// []byte("admin"),
 		bcrypt.DefaultCost)
-	_, err = db.Exec(`
+	_, err := db.Exec(`
 		INSERT INTO users (firstname, lastname, age, email, username, password, admin)
 		VALUES
 			('admin', 'istrator', 0, 'admin@compfest.local', 'admin', $1, true)`,
@@ -102,6 +131,7 @@ func initDB() *sql.DB {
 			('Mr. Strange', 'hey im a doctor yknow', 20)
 	`)
 	ErrPanic(err)
+
 	tmphash, _ := bcrypt.GenerateFromPassword(
 		[]byte("patient"),
 		bcrypt.DefaultCost)
@@ -116,6 +146,28 @@ func initDB() *sql.DB {
 		string(tmphash))
 	ErrPanic(err)
 
+	var images []interface{}
+	for i := 0; i < 4; i++ {
+		imgFileName := fmt.Sprintf("assets/img/departments-%d.jpg", i+1)
+		imgFile, err := os.Open(imgFileName)
+		ErrPanic(err)
+		ImgBytes, err := ioutil.ReadAll(imgFile)
+		ErrPanic(err)
+		images = append(images, ImgBytes)
+	}
+	_, err = db.Exec(`
+		INSERT INTO images (appointment_id, img)
+		VALUES
+			(1, $1),
+			(1, $2),
+			(2, $3),
+			(1, $4)`,
+		images...)
+	ErrPanic(err)
+}
+
+// run a test query on dummy records
+func testQuery(db *sql.DB) {
 	// read
 	rows, err := db.Query("SELECT * FROM appointments;")
 	ErrPanic(err)
@@ -135,7 +187,4 @@ func initDB() *sql.DB {
 	for _, v := range availableAppointments {
 		log.Println(v)
 	}
-
-	log.Println("initialized database", db)
-	return db
 }

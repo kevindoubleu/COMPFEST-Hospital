@@ -27,7 +27,7 @@ func adminCreate(w http.ResponseWriter, r *http.Request) {
 		r.PostFormValue("capacity"))
 	if err != nil {
 		log.Println("insert db error:", err)
-		http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusBadRequest)
+		http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusSeeOther)
 		return
 	}
 
@@ -103,7 +103,7 @@ func adminUpdate(w http.ResponseWriter, r *http.Request) {
 		r.PostFormValue("id"))
 	if err != nil {
 		log.Println("update db error:", err)
-		http.Redirect(w, r, "/administration?msg="+ErrMsgUpdateFail, http.StatusBadRequest)
+		http.Redirect(w, r, "/administration?msg="+ErrMsgUpdateFail, http.StatusSeeOther)
 		return
 	}
 
@@ -124,7 +124,7 @@ func adminDelete(w http.ResponseWriter, r *http.Request) {
 	if err1 != nil || err2 != nil {
 		log.Println("update db error:", err1)
 		log.Println("delete db error:", err2)
-		http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusBadRequest)
+		http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusSeeOther)
 		return
 	}
 

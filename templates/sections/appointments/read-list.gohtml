@@ -50,7 +50,7 @@
                         <p>
                             {{$v.Appointment.Description}}
                         </p>
-                        <hr class="appointment-apply-btn">
+                        {{template "appointment-images" .Id}}
                         {{template "appointment-apply" $v.Appointment}}
                     </div>
                 </li>

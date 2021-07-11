@@ -1,0 +1,61 @@
+{{/* pipeline is appointment_id to be sent by ajax */}}
+
+{{define "appointment-images"}}
+<hr id="appointment-images-hr-{{.}}">
+<div class="container-fluid gallery">
+    <div class="row no-gutters" id="appointment-images-{{.}}">
+        <!-- {{/* sample image -->
+        <div class="col-lg-3 col-md-4">
+            <div class="gallery-item">
+                <a href="/assets/img/gallery/gallery-1.jpg" class="galelry-lightbox">
+                    <img src="/assets/img/gallery/gallery-1.jpg" alt="" class="img-fluid">
+                </a>
+            </div>
+        </div>
+        <!-- */}} -->
+    </div>
+</div>
+
+<!-- do ajax requests to get the images -->
+<script>
+    (function () {
+        var xhr = new XMLHttpRequest()
+        xhr.open("GET", "/appointments/images/{{.}}")
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status == 200) {
+                result = JSON.parse(xhr.responseText)
+                if (result.Ok && result.Images) {
+                    // create the image elements
+                    for (let img of result.Images) {
+                        let i = document.createElement("img")
+                        i.classList.add("img-fluid")
+                        i.src = "data:image/jpg;base64,"+img.Base64
+
+                        // outer div
+                        let d1 = document.createElement("div")
+                        d1.classList.add("col-lg-3")
+                        d1.classList.add("col-md-4")
+                        // inner div
+                        let d2 = document.createElement("div")
+                        d2.classList.add("gallery-item")
+                        // a
+                        let a = document.createElement("a")
+                        a.classList.add("galelry-lightbox")
+                        a.href = "data:image/jpg;base64,"+img.Base64
+
+                        d1.appendChild(d2)
+                        d2.appendChild(a)
+                        a.appendChild(i)
+
+                        document.getElementById("appointment-images-{{.}}").appendChild(d1)
+                    }
+                } else {
+                    // hide the horizontal rule
+                    document.getElementById("appointment-images-hr-{{.}}").style.display = "none"
+                }
+            }
+        }
+        xhr.send()
+    })()
+</script>
+{{end}}
