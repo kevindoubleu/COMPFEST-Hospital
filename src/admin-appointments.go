@@ -198,3 +198,26 @@ func adminImagesAdd(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/administration?msg="+MsgInsertSuccess, http.StatusSeeOther)
 }
+
+// IMAGE DELETE
+// URL path is id
+func adminImagesDelete(w http.ResponseWriter, r *http.Request) {
+	type response struct {
+		Ok bool
+	}
+	id := r.URL.Path
+	resp := response{}
+
+	_, err := db.Exec(`DELETE FROM images WHERE appointment_id = $1`, id)
+	if err != nil {
+		json.NewEncoder(w).Encode(resp)
+		return
+	}
+
+	// set ok and send
+	resp.Ok = true
+	err = json.NewEncoder(w).Encode(resp)
+	if err != nil {
+		log.Println("appointment img delete:", err)
+	}
+}

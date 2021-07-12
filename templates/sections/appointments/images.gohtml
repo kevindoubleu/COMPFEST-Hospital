@@ -50,12 +50,10 @@
                         document.getElementById("appointment-images-{{.}}").appendChild(d1)
                     }
                 } else {
-                    // hide the horizontal rule
-                    // document.getElementById("appointment-images-hr-{{.}}").style.display = "none"
                     // add "no images" text
                     let p = document.createElement("p")
                     p.innerHTML = "No images"
-                    document.getElementById("appointment-images-hr-{{.}}").parentElement.appendChild(p)
+                    document.getElementById("appointment-images-{{.}}").parentElement.appendChild(p)
                 }
             }
         }

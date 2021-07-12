@@ -76,12 +76,14 @@ july 10
 
 july 11
 - appointments can have images
-- admin can add images on appointment creation
-- admin can view, appointment images
-- admin can add images on existing appointment
+  - patients can view appointment images
+- admin create appointment supports image uploads
+- admin crud appointment images
+  - admin can (read) view appointment images (uses same endpoint as patients)
+  - admin can (update) add images on existing appointment
+  - admin can delete images (per appointment)
 
 planned features
-- admin crud appointment images
 - comments for each appointment (?)
 - create new role under admin: moderator, for each appointment
 - appointment pics are showed in patient's appointment listing

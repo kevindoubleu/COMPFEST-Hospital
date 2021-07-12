@@ -1,0 +1,76 @@
+{{/* pipeline is Appointment, with appointment_id to be sent by ajax*/}}
+
+{{define "appointment-images-delete"}}
+<button id="deleteImagesButton{{.Id}}" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteImagesModal{{.Id}}">
+    Clear
+</button>
+  
+<!-- Modal -->
+<div class="modal fade" id="deleteImagesModal{{.Id}}" tabindex="-1" aria-labelledby="deleteImagesModalLabel{{.Id}}" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="deleteImagesModalLabel{{.Id}}">Confirmation</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <p>Confirm deletion for {{.Doctor}}'s appointment?</p>
+            <p>This will also cancel booking for all registrants of this appointment.</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button id="img-delete-{{.Id}}" type="submit" class="btn btn-danger" data-bs-dismiss="modal">Clear</button>
+        </div>
+    </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        document.getElementById("img-delete-{{.Id}}").onclick = ajaxImageDelete
+        function ajaxImageDelete() {
+            var xhr = new XMLHttpRequest()
+            xhr.open("GET", "/administration/images/delete/{{.Id}}")
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status == 200) {
+                    result = JSON.parse(xhr.responseText)
+                    if (result.Ok) {
+                        let imgDiv = document.getElementById("appointment-images-{{.Id}}")
+                        // remove the images
+                        imgDiv.innerHTML = ""
+                        // add "no images" text
+                        let p = document.createElement("p")
+                        p.innerHTML = "No images"
+                        imgDiv.parentElement.appendChild(p)
+                        // disable clear button
+                        document.getElementById("deleteImagesButton{{.Id}}").disabled = true
+                    } else {
+                        // show error modal
+                        document.getElementById("imageDeleteError{{.Id}}").click()
+                    }
+                }
+            }
+            xhr.send()
+        }
+    })()
+</script>
+
+<!-- error modal -->
+<button id="imageDeleteError{{.Id}}" type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#imageDeleteErrorModal{{.Id}}" style="display: none;"></button>
+<div class="modal fade" id="imageDeleteErrorModal{{.Id}}" tabindex="-1" aria-labelledby="imageDeleteErrorModal{{.Id}}Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageDeleteError{{.Id}}Label">Error</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="imageDeleteErrorModalContent{{.Id}}">
+                An error occurred while trying to clear images of {{.Doctor}}'s appointment
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}
