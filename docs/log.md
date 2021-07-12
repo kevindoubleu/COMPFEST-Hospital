@@ -82,9 +82,12 @@ july 11
   - admin can (read) view appointment images (uses same endpoint as patients)
   - admin can (update) add images on existing appointment
   - admin can delete images (per appointment)
+- appointment image in patient's "my appointment" section
+
+july 12
+- comments for each appointment (?)
 
 planned features
-- comments for each appointment (?)
 - create new role under admin: moderator, for each appointment
 - appointment pics are showed in patient's appointment listing
 - admins can assign patients to appointments

@@ -29,14 +29,17 @@ func appointments(w http.ResponseWriter, r *http.Request) {
 
 	// get patient's registered appointment if exist
 	row := db.QueryRow(`
-		SELECT doctor, description
+		SELECT id, doctor, description
 		FROM users
 		JOIN appointments
 			ON appointment_id = appointments.id
 		WHERE users.username = $1`,
 		patientUsername)
 	patientAppointment := Appointment{}
-	row.Scan(&patientAppointment.Doctor, &patientAppointment.Description)
+	row.Scan(
+		&patientAppointment.Id,
+		&patientAppointment.Doctor,
+		&patientAppointment.Description)
 
 	// get appointments
 	rows, err := db.Query(`

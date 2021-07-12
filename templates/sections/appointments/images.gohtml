@@ -48,6 +48,9 @@
                         a.appendChild(i)
 
                         document.getElementById("appointment-images-{{.}}").appendChild(d1)
+                        try {
+                            document.getElementById("my-appointment-images-{{.}}").appendChild(d1.cloneNode(true))
+                        } catch (error) {}
                     }
                 } else {
                     // add "no images" text
