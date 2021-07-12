@@ -32,35 +32,46 @@ func adminCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// images
-	f, _, err := r.FormFile("image")
-	log.Printf("err: %#+v\n", err)
+	// process all images into bytes
+	err = r.ParseMultipartForm(1000000)
 	if err != nil {
 		log.Println("appointment image:", err)
 		http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusSeeOther)
 		return
 	}
-	imgBytes, err := ioutil.ReadAll(f)
-	if err != nil {
-		log.Println("appointment image:", err)
-		http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusSeeOther)
-		return
+	var imagesBytes [][]byte
+	fileHeaders := r.MultipartForm.File["images"]
+	for _, fh := range fileHeaders {
+		f, err := fh.Open()
+		if err != nil {
+			break
+		}
+		defer f.Close()
+
+		imgBytes, err := ioutil.ReadAll(f)
+		if err != nil {
+			break
+		}
+		imagesBytes = append(imagesBytes, imgBytes)
 	}
 
 	// get newest appointment id
 	row := db.QueryRow(`SELECT id FROM appointments ORDER BY id DESC LIMIT 1;`)
 	var id int
 	row.Scan(&id)
-	_, err = db.Exec(`
-		INSERT INTO images (appointment_id, img)
-		VALUES
-			($1, $2)`,
-		id,
-		imgBytes)
-	if err != nil {
-		log.Println("appointment image:", err)
-		http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusSeeOther)
-		return
+	// insert images
+	for _, img := range imagesBytes {
+		_, err = db.Exec(`
+			INSERT INTO images (appointment_id, img)
+			VALUES
+				($1, $2)`,
+			id,
+			img)
+		if err != nil {
+			log.Println("appointment image:", err)
+			http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusSeeOther)
+			return
+		}
 	}
 
 	http.Redirect(w, r, "/administration?msg="+MsgInsertSuccess, http.StatusSeeOther)
