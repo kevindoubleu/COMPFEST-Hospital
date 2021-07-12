@@ -15,7 +15,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="create-appointment" method="post" action="/administration/create">
+                <form id="create-appointment" method="post" action="/administration/create" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="doctor" class="form-label">Doctor name</label>
                         <input type="text" class="form-control" id="doctor" name="doctor" placeholder="Dr. Strange">
@@ -27,6 +27,10 @@
                     <div class="mb-3">
                         <label for="capacity" class="form-label">Capacity (maximum registrants)</label>
                         <input type="number" class="form-control" id="capacity" name="capacity" placeholder="10">
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Pictures (you may select multiple)</label>
+                        <input type="file" class="form-control" id="image" name="image" placeholder="picture.jpg" multiple>
                     </div>
                 </form>
             </div>

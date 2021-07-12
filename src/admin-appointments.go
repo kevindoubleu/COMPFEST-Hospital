@@ -2,6 +2,7 @@ package src
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -27,6 +28,37 @@ func adminCreate(w http.ResponseWriter, r *http.Request) {
 		r.PostFormValue("capacity"))
 	if err != nil {
 		log.Println("insert db error:", err)
+		http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusSeeOther)
+		return
+	}
+
+	// images
+	f, _, err := r.FormFile("image")
+	log.Printf("err: %#+v\n", err)
+	if err != nil {
+		log.Println("appointment image:", err)
+		http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusSeeOther)
+		return
+	}
+	imgBytes, err := ioutil.ReadAll(f)
+	if err != nil {
+		log.Println("appointment image:", err)
+		http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusSeeOther)
+		return
+	}
+
+	// get newest appointment id
+	row := db.QueryRow(`SELECT id FROM appointments ORDER BY id DESC LIMIT 1;`)
+	var id int
+	row.Scan(&id)
+	_, err = db.Exec(`
+		INSERT INTO images (appointment_id, img)
+		VALUES
+			($1, $2)`,
+		id,
+		imgBytes)
+	if err != nil {
+		log.Println("appointment image:", err)
 		http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusSeeOther)
 		return
 	}
@@ -112,19 +144,22 @@ func adminUpdate(w http.ResponseWriter, r *http.Request) {
 
 // DELETE
 func adminDelete(w http.ResponseWriter, r *http.Request) {
-	// unbook patients and delete appointment in db
+	// unbook patients, delete all images, and delete appointment in db
 	_, err1 := db.Exec(`
 		UPDATE users
 		SET appointment_id = null
 		WHERE appointment_id = $1`,
 		r.PostFormValue("id"))
 	_, err2 := db.Exec(`
+		DELETE FROM images WHERE appointment_id = $1`,
+		r.PostFormValue("id"))
+	_, err3 := db.Exec(`
 		DELETE FROM appointments WHERE id = $1`,
 		r.PostFormValue("id"))
 	if err1 != nil || err2 != nil {
 		log.Println("update db error:", err1)
-		log.Println("delete db error:", err2)
-		http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusSeeOther)
+		log.Println("delete db error:", err2, err3)
+		http.Redirect(w, r, "/administration?msg="+ErrMsgDeleteFail, http.StatusSeeOther)
 		return
 	}
 

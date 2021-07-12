@@ -77,6 +77,7 @@ Along making this project, I come accross some questions I hope to ask in the ac
 - where are you supposed to write js code? especially AJAX related stuff, especially within templates (in this project, i wrote them in the templates just under the html element they're responsible for)
 - is it possible to do AJAX / microservice APIs without js?
 - how do u document the API responses of every AJAX endpoint like the JSON structure for example?
+- How best to implement login for multiple user roles? e.g. user, moderator, admin. multiple login portal for each table or 1 login portal that checks all tables? multiple user table depending on role, or 1 users table with a role field?
 
 ###### Footnotes
 

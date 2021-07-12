@@ -22,10 +22,12 @@
                         <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i>
                     </a>
                     <div id="faq-list-{{$k}}" class="collapse" data-bs-parent=".faq-list">
+                        <!-- description -->
                         <p>
                             {{$v.Appointment.Description}}
                         </p>
                         <hr>
+                        <!-- registrant list -->
                         {{if $v.Registrants}}
                         <table class="table table-responsive">
                             <thead>
@@ -54,6 +56,9 @@
                         {{end}}
                         {{template "admin-appointments-update" $v.Appointment}}
                         {{template "admin-appointments-delete" $v.Appointment}}
+                        <!-- images -->
+                        {{template "appointment-images" $v.Appointment.Id}}
+                        <br>
                     </div>
                 </li>
                 {{end}}
