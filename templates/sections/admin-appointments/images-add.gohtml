@@ -1,0 +1,51 @@
+{{/* pipeline is appointment_id */}}
+
+{{define "appointment-images-add"}}
+<br>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addImageModalToggle{{.}}">
+    Add
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="addImageModalToggle{{.}}" aria-hidden="true" aria-labelledby="addImageModalToggle{{.}}Label" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addImageModalToggle{{.}}Label">Add appointment images</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="add-appointment-image-{{.}}" method="post" action="/administration/images/add" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="images" class="form-label">Pictures (you may select multiple)</label>
+                        <input type="file" class="form-control" id="images" name="images" placeholder="picture.jpg" multiple>
+                    </div>
+                    <input type="hidden" name="id" value="{{.}}">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" data-bs-target="#addImageModalToggle{{.}}2" data-bs-toggle="modal" data-bs-dismiss="modal">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addImageModalToggle{{.}}2" aria-hidden="true" aria-labelledby="addImageModalToggle{{.}}Label2" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addImageModalToggle{{.}}Label2">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Confirm update on the appointment?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-target="#addImageModalToggle{{.}}" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
+                <button class="btn btn-success" type="submit" form="add-appointment-image-{{.}}">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

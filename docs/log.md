@@ -77,7 +77,8 @@ july 10
 july 11
 - appointments can have images
 - admin can add images on appointment creation
-- admin can view appointment images
+- admin can view, appointment images
+- admin can add images on existing appointment
 
 planned features
 - admin crud appointment images

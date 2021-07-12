@@ -2,9 +2,9 @@ package src
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type AppointmentDetail struct {
@@ -32,46 +32,14 @@ func adminCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// process all images into bytes
-	err = r.ParseMultipartForm(1000000)
-	if err != nil {
-		log.Println("appointment image:", err)
-		http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusSeeOther)
-		return
-	}
-	var imagesBytes [][]byte
-	fileHeaders := r.MultipartForm.File["images"]
-	for _, fh := range fileHeaders {
-		f, err := fh.Open()
-		if err != nil {
-			break
-		}
-		defer f.Close()
-
-		imgBytes, err := ioutil.ReadAll(f)
-		if err != nil {
-			break
-		}
-		imagesBytes = append(imagesBytes, imgBytes)
-	}
-
 	// get newest appointment id
 	row := db.QueryRow(`SELECT id FROM appointments ORDER BY id DESC LIMIT 1;`)
 	var id int
 	row.Scan(&id)
-	// insert images
-	for _, img := range imagesBytes {
-		_, err = db.Exec(`
-			INSERT INTO images (appointment_id, img)
-			VALUES
-				($1, $2)`,
-			id,
-			img)
-		if err != nil {
-			log.Println("appointment image:", err)
-			http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusSeeOther)
-			return
-		}
+	
+	if success := addImageToAppointment(r, id); !success {
+		http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusSeeOther)
+		return
 	}
 
 	http.Redirect(w, r, "/administration?msg="+MsgInsertSuccess, http.StatusSeeOther)
@@ -213,4 +181,20 @@ func adminKick(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("admin kick:", err)
 	}
+}
+
+// IMAGE ADD
+func adminImagesAdd(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.PostFormValue("id"))
+	if err != nil {
+		http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusSeeOther)
+		return
+	}
+
+	if success := addImageToAppointment(r, id); !success {
+		http.Redirect(w, r, "/administration?msg="+ErrMsgInsertFail, http.StatusSeeOther)
+		return
+	}
+
+	http.Redirect(w, r, "/administration?msg="+MsgInsertSuccess, http.StatusSeeOther)
 }

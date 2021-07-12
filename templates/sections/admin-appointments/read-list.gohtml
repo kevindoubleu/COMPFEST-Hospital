@@ -53,12 +53,15 @@
                             {{end}}
                             </tbody>
                         </table>
+                        {{else}}
+                        <p>No registrants</p>
+                        <br>
                         {{end}}
                         {{template "admin-appointments-update" $v.Appointment}}
                         {{template "admin-appointments-delete" $v.Appointment}}
                         <!-- images -->
                         {{template "appointment-images" $v.Appointment.Id}}
-                        <br>
+                        {{template "appointment-images-add" $v.Appointment.Id}}
                     </div>
                 </li>
                 {{end}}

@@ -45,6 +45,8 @@ func Start() {
 	http.Handle("/administration/kick/",
 		JSONResponse(AdminOnly(GetOnly(http.StripPrefix("/administration/kick/",
 		http.HandlerFunc(adminKick))))))
+	http.Handle("/administration/images/add",
+		AdminOnly(PostOnly(http.HandlerFunc(adminImagesAdd))))
 
 	http.Handle("/administration/patients",
 		AdminOnly(GetOnly(http.HandlerFunc(patients))))
