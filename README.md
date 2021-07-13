@@ -63,6 +63,7 @@ ___
 - must've used a more general template where I understand the deps, or make 1 myself, couldn't use toasts with this template for some reason
 - must've used sessions (instead of jwt, but that's a requirement in this project)
 - must've gone with a more "struct oriented" approach, with methods instead of regular functions, bcs i didn't do this, i had to edit filenames to (barely) control go's compilation order
+- must've used jquery
 
 would love to get another project like this where I could correct my mistakes
 

@@ -50,7 +50,9 @@
                     // add "no comments" text
                     let p = document.createElement("p")
                     p.innerHTML = "No comments"
+                    p.id = "no-comments-text"
                     document.getElementById("appointment-comments-{{.}}").appendChild(p)
+                    document.getElementById("appointment-comments-{{.}}").appendChild(document.createElement("br"))
                 }
             }
         }

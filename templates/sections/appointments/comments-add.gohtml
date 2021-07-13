@@ -1,0 +1,85 @@
+{{/* pipeline is appointment_id to be sent by ajax */}}
+
+{{define "appointment-comments-add"}}
+<form action="/appointments/comments/add" method="post" id="comment-form-{{.}}">
+    <input type="text" name="comment" id="add-comment-{{.}}">
+    <input type="submit" value="Comment">
+</form>
+<script>
+    (function () {
+        document.getElementById("comment-form-{{.}}").addEventListener("submit", function (e) {
+            e.preventDefault()
+        })
+        document.getElementById("comment-form-{{.}}").onsubmit = ajaxCommentAdd
+        function ajaxCommentAdd() {
+            var xhr = new XMLHttpRequest()
+            xhr.open("POST", "/appointments/comments/add")
+            xhr.setRequestHeader("Content-Type", "application/json")
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status == 200) {
+                    result = JSON.parse(xhr.responseText)
+                    if (result.Ok) {
+                        try {
+                            document.getElementById("no-comments-text").remove()
+                        } catch (error) {}
+
+                        let author = document.createElement("strong")
+                        author.innerHTML = result.Author
+
+                        let divEnd = document.createElement("div")
+                        divEnd.classList.add("float-end")
+                        let icon = document.createElement("i")
+                        icon.classList.add("bx")
+                        icon.classList.add("bx-timer")
+                        icon.innerHTML += result.Posted_at
+                        divEnd.appendChild(icon)
+
+                        let commentText = document.createElement("p")
+                        commentText.innerHTML = result.Comment
+
+                        // wrapper div
+                        d1 = document.createElement("div")
+                        d1.appendChild(author)
+                        d1.appendChild(divEnd)
+                        d1.appendChild(commentText)
+                        d1.appendChild(document.createElement("br"))
+
+                        document.getElementById("appointment-comments-{{.}}").appendChild(d1)
+                        document.getElementById("add-comment-{{.}}").value = ""
+                    } else {
+                        // show error modal
+                        document.getElementById("commentAddErrorModalContent{{.}}").innerHTML =
+                            "An error occurred while trying to comment \"" + document.getElementById("add-comment-{{.}}").value + "\"."
+                        document.getElementById("commentAddError{{.}}").click()
+                    }
+                }
+            }
+            xhr.send(JSON.stringify(
+                {
+                    "Appointment_id": parseInt("{{.}}"),
+                    "Comment": document.getElementById("add-comment-{{.}}").value
+                }
+            ))
+        }
+    })()
+</script>
+
+<!-- error modal -->
+<button id="commentAddError{{.}}" type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#commentAddErrorModal{{.}}" style="display: none;"></button>
+<div class="modal fade" id="commentAddErrorModal{{.}}" tabindex="-1" aria-labelledby="commentAddErrorModal{{.}}Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="commentAddError{{.}}Label">Error</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="commentAddErrorModalContent{{.}}">
+                error message here
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

@@ -89,11 +89,16 @@ july 12
 
 july 13
 - appointments can have comments
+- patients and admins can comment on any appointment
+  - uses JSON in both req + resp!
+
+july 14
+- admins can delete comments (per appointment)
 
 planned features
 - patients can upload a profile picture
   - has a default generic picture
   - shows up in comments
-- admins can assign patients to appointments
-- admins can cancel patient's appointment from `/administration/patients`
+- ~~admins can assign patients to appointments~~ no time
+- ~~admins can cancel patient's appointment from `/administration/patients`~~ no time
 - ~~create new role under admin: moderator, for each appointment~~ violates requirement 1: "There are two types of account roles: Administrator and Patient."

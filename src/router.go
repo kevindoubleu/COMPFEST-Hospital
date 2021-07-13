@@ -36,6 +36,8 @@ func Start() {
 	http.Handle("/appointments/comments/",
 		JSONResponse(LoggedInOnly(GetOnly(http.StripPrefix("/appointments/comments/",
 		http.HandlerFunc(appointmentComments))))))
+	http.Handle("/appointments/comments/add",
+		JSONResponse(LoggedInOnly(PostOnly(http.HandlerFunc(addCommentToAppointment)))))
 
 	http.Handle("/administration",
 		AdminOnly(GetOnly(http.HandlerFunc(administration))))
