@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"time"
 
 	_ "github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
@@ -26,6 +27,20 @@ type Patient struct {
 	Username string
 	Password string
 	Appointment_id sql.NullInt64
+}
+
+type Image struct {
+	Id int
+	Appointment_id int
+	Img []byte
+}
+
+type Comment struct {
+	Id int
+	Author string
+	Appointment_id int
+	Comment string
+	Posted_at string
 }
 
 func initDB() *sql.DB {
@@ -63,7 +78,7 @@ func initDB() *sql.DB {
 	return db
 }
 
-// tables: appointments, users
+// tables: appointments, users, images, comments
 func initTables(db *sql.DB) {
 	_, err := db.Exec(`DROP TABLE IF EXISTS appointments CASCADE`)
 	ErrPanic(err)
@@ -79,7 +94,7 @@ func initTables(db *sql.DB) {
 
 	// we can add more admins in the future
 	// and we can revoke admin rights by setting admin to false
-	_, err = db.Exec(`DROP TABLE IF EXISTS users`)
+	_, err = db.Exec(`DROP TABLE IF EXISTS users CASCADE`)
 	ErrPanic(err)
 	_, err = db.Exec(`
 		CREATE TABLE users(
@@ -106,6 +121,20 @@ func initTables(db *sql.DB) {
 		)
 	`)
 	ErrPanic(err)
+
+	// appointment comments
+	_, err = db.Exec(`DROP TABLE IF EXISTS comments`)
+	ErrPanic(err)
+	_, err = db.Exec(`
+		CREATE TABLE comments(
+			id             SERIAL PRIMARY KEY,
+			author         TEXT references users(username) NOT NULL,
+			appointment_id INT references appointments(id) NOT NULL,
+			comment        TEXT NOT NULL,
+			posted_at      TIMESTAMP DEFAULT now()
+		)
+	`)
+	ErrPanic(err)
 }
 
 // creates 1 admin, and some dummy records
@@ -122,7 +151,7 @@ func initRecords(db *sql.DB) {
 		string(hash))
 	ErrPanic(err)
 
-	// insert dummy values
+	// appointments
 	_, err = db.Exec(`
 		INSERT INTO appointments (doctor, description, capacity)
 		VALUES
@@ -132,6 +161,7 @@ func initRecords(db *sql.DB) {
 	`)
 	ErrPanic(err)
 
+	// users
 	tmphash, _ := bcrypt.GenerateFromPassword(
 		[]byte("patient"),
 		bcrypt.DefaultCost)
@@ -146,6 +176,7 @@ func initRecords(db *sql.DB) {
 		string(tmphash))
 	ErrPanic(err)
 
+	// images
 	var images []interface{}
 	for i := 0; i < 4; i++ {
 		imgFileName := fmt.Sprintf("assets/img/departments-%d.jpg", i+1)
@@ -163,6 +194,20 @@ func initRecords(db *sql.DB) {
 			(2, $3),
 			(1, $4)`,
 		images...)
+	ErrPanic(err)
+
+	// comments
+	_, err = db.Exec(`
+		INSERT INTO comments (author, appointment_id, comment, posted_at)
+		VALUES
+			('aboots', 1, 'cant wait for this appointment!', $1),
+			('budiman', 1, 'test123', $2),
+			('gulamanis', 2, 'is this an online appointment?', $3),
+			('corbusir', 1, 'hey we can turn this into podcast', $4)`,
+		time.Now().Add(33 * time.Minute * -1),
+		time.Now().Add(22 * time.Minute * -1),
+		time.Now().Add(11 * time.Minute * -1),
+		time.Now())
 	ErrPanic(err)
 }
 

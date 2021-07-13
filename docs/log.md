@@ -75,8 +75,11 @@ july 10
 - ajax for admin kicking patients from appointments
 
 july 11
+- add middlewares
 - appointments can have images
   - patients can view appointment images
+
+july 12
 - admin create appointment supports image uploads
 - admin crud appointment images
   - admin can (read) view appointment images (uses same endpoint as patients)
@@ -84,11 +87,13 @@ july 11
   - admin can delete images (per appointment)
 - appointment image in patient's "my appointment" section
 
-july 12
-- comments for each appointment (?)
+july 13
+- appointments can have comments
 
 planned features
-- create new role under admin: moderator, for each appointment
-- appointment pics are showed in patient's appointment listing
+- patients can upload a profile picture
+  - has a default generic picture
+  - shows up in comments
 - admins can assign patients to appointments
 - admins can cancel patient's appointment from `/administration/patients`
+- ~~create new role under admin: moderator, for each appointment~~ violates requirement 1: "There are two types of account roles: Administrator and Patient."

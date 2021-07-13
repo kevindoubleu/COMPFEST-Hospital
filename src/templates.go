@@ -21,6 +21,7 @@ func init() {
 	tpl.ParseGlob("templates/sections/*.gohtml")
 	tpl.ParseGlob("templates/sections/index/*.gohtml")
 	tpl.ParseGlob("templates/sections/appointments/*.gohtml")
+	tpl.ParseGlob("templates/sections/patient/*.gohtml")
 	tpl.ParseGlob("templates/sections/admin-appointments/*.gohtml")
 	tpl.ParseGlob("templates/sections/admin-patients/*.gohtml")
 	tpl.ParseGlob("templates/pages/*.gohtml")

@@ -1,0 +1,60 @@
+{{/* pipeline is appointment_id to be sent by ajax */}}
+
+{{define "appointment-comments"}}
+<hr>
+<div id="appointment-comments-{{.}}" class="container-fluid">
+    <!-- {{/* template -->
+    <strong>author</strong>
+    <div class="float-end">
+        <i class="bx bx-timer"></i>
+        17 mins ago
+    </div>
+    <p>actual comment here</p>
+    <br>
+    <!-- */}} -->
+</div>
+<script>
+    (function () {
+        var xhr = new XMLHttpRequest()
+        xhr.open("GET", "/appointments/comments/{{.}}")
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status == 200) {
+                result = JSON.parse(xhr.responseText)
+                if (result.Ok && result.Comments) {
+                    // create the image elements
+                    for (let comment of result.Comments) {
+                        let author = document.createElement("strong")
+                        author.innerHTML = comment.Author
+
+                        let divEnd = document.createElement("div")
+                        divEnd.classList.add("float-end")
+                        let icon = document.createElement("i")
+                        icon.classList.add("bx")
+                        icon.classList.add("bx-timer")
+                        icon.innerHTML += comment.Posted_at
+                        divEnd.appendChild(icon)
+
+                        let commentText = document.createElement("p")
+                        commentText.innerHTML = comment.Comment
+
+                        // wrapper div
+                        d1 = document.createElement("div")
+                        d1.appendChild(author)
+                        d1.appendChild(divEnd)
+                        d1.appendChild(commentText)
+                        d1.appendChild(document.createElement("br"))
+
+                        document.getElementById("appointment-comments-{{.}}").appendChild(d1)
+                    }
+                } else {
+                    // add "no comments" text
+                    let p = document.createElement("p")
+                    p.innerHTML = "No comments"
+                    document.getElementById("appointment-comments-{{.}}").appendChild(p)
+                }
+            }
+        }
+        xhr.send()
+    })()
+</script>
+{{end}}

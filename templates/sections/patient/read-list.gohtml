@@ -54,6 +54,7 @@
                             {{$v.Appointment.Description}}
                         </p>
                         {{template "appointment-images" .Id}}
+                        {{template "appointment-comments" .Id}}
                         {{template "appointment-apply" $v.Appointment}}
                     </div>
                 </li>

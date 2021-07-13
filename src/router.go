@@ -25,14 +25,17 @@ func Start() {
 
 	http.Handle("/appointments",
 		LoggedInOnly(GetOnly(http.HandlerFunc(appointments))))
-	http.Handle("/appointments/images/",
-		JSONResponse(LoggedInOnly(GetOnly(http.StripPrefix("/appointments/images/",
-		http.HandlerFunc(appointmentImages))))))
 	http.Handle("/appointments/apply/",
 		JSONResponse(LoggedInOnly(GetOnly(http.StripPrefix("/appointments/apply/",
 		http.HandlerFunc(appointmentsApply))))))
 	http.Handle("/appointments/cancel",
 		LoggedInOnly(GetOnly(http.HandlerFunc(appointmentsCancel))))
+	http.Handle("/appointments/images/",
+		JSONResponse(LoggedInOnly(GetOnly(http.StripPrefix("/appointments/images/",
+		http.HandlerFunc(appointmentImages))))))
+	http.Handle("/appointments/comments/",
+		JSONResponse(LoggedInOnly(GetOnly(http.StripPrefix("/appointments/comments/",
+		http.HandlerFunc(appointmentComments))))))
 
 	http.Handle("/administration",
 		AdminOnly(GetOnly(http.HandlerFunc(administration))))

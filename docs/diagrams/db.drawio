@@ -96,7 +96,7 @@
                 <mxCell id="O52WOcm6CTFsDJhRvSOu-49" value="password" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;" parent="O52WOcm6CTFsDJhRvSOu-31" vertex="1">
                     <mxGeometry x="30" y="217.20000000000005" width="150" height="33.6" as="geometry"/>
                 </mxCell>
-                <mxCell id="ZiDTlyhOMb_Lww5j8gPe-1" value="role" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;" parent="O52WOcm6CTFsDJhRvSOu-31" vertex="1">
+                <mxCell id="ZiDTlyhOMb_Lww5j8gPe-1" value="admin" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;" parent="O52WOcm6CTFsDJhRvSOu-31" vertex="1">
                     <mxGeometry x="30" y="250.8000000000001" width="150" height="33.6" as="geometry"/>
                 </mxCell>
                 <mxCell id="ZiDTlyhOMb_Lww5j8gPe-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="O52WOcm6CTFsDJhRvSOu-18" target="O52WOcm6CTFsDJhRvSOu-2" edge="1">
