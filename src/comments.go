@@ -68,6 +68,11 @@ func addCommentToAppointment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if len(c.Comment) == 0 {
+		json.NewEncoder(w).Encode(resp)
+		return
+	}
+
 	// insert to db
 	_, err = db.Exec(`
 		INSERT INTO comments (author, appointment_id, comment)
