@@ -94,11 +94,12 @@ july 13
 
 july 14
 - admins can enable/disable comments (per appointment)
+- project deadline
 
 planned features
-- patients can upload a profile picture
-  - has a default generic picture
-  - shows up in comments
+- ~~patients can upload a profile picture~~ no time
+  - ~~has a default generic picture~~
+  - ~~shows up in comments~~
 - ~~admins can assign patients to appointments~~ no time
 - ~~admins can cancel patient's appointment from `/administration/patients`~~ no time
 - ~~create new role under admin: moderator, for each appointment~~ violates requirement 1: "There are two types of account roles: Administrator and Patient."
