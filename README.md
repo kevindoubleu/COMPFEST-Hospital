@@ -23,7 +23,11 @@ Dependencies:
 
 notes:
 - default admin credentials are username:`admin` password:`compfesthospitaladmin`
-- sample patient credential username:`aboots` password:`andi`
+- predefined patient credentials
+  - username:`aboots` password:`patient`
+  - username:`budiman` password:`patient`
+  - username:`gulamanis` password:`patient`
+  - username:`denic` password:`patient`
 
 ## Frontend
 

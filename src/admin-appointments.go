@@ -225,6 +225,35 @@ func adminImagesDelete(w http.ResponseWriter, r *http.Request) {
 }
 
 // TOGGLE COMMENTS
+// URL path is appointment_id
 func adminToggleComments(w http.ResponseWriter, r *http.Request) {
+	type response struct {
+		Ok bool
+		Commentable bool
+	}
+	resp := response{}
+	apId := r.URL.Path
 
+	// find current state
+	row := db.QueryRow(`SELECT commentable FROM appointments WHERE id = $1`,
+		apId)
+	var current bool
+	row.Scan(&current)
+
+	// set new state
+	_, err := db.Exec(`UPDATE appointments SET commentable = $1 WHERE id = $2`,
+		!current,
+		apId)
+	if err != nil {
+		json.NewEncoder(w).Encode(resp)
+		return
+	}
+
+	// set ok and send response
+	resp.Ok = true
+	resp.Commentable = !current
+	err = json.NewEncoder(w).Encode(resp)
+	if err != nil {
+		log.Println("admin toggle comments:", err)
+	}
 }

@@ -173,7 +173,7 @@ func initRecords(db *sql.DB) {
 			('Andi', 'boots', 18, 'andi@email.com', 'aboots', $1, 1),
 			('Budi', 'man', 19, 'budi@email.com', 'budiman', $1, 1),
 			('Cindy', 'gulla', 20, 'cindy@email.com', 'gulamanis', $1, 1),
-			('Deni', 'korbusir', 21, 'deni@email.com', 'corbusir', $1, 2),
+			('Deni', 'korbusir', 21, 'deni@email.com', 'denic', $1, 2),
 			('Eddy', 'gordo', 22, 'eddy@email.com', 'tekken7', $1, 2)`,
 		string(tmphash))
 	ErrPanic(err)

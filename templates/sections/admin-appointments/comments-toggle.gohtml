@@ -1,0 +1,96 @@
+{{/* pipeline is Appointment with appointment_id to be sent by ajax */}}
+
+{{define "admin-comments-toggle"}}
+<!-- Button trigger modal -->
+<br>
+<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#toggleCommentModal{{.Id}}">
+    Toggle comments
+</button>
+  
+<!-- Modal -->
+<div class="modal fade" id="toggleCommentModal{{.Id}}" tabindex="-1" aria-labelledby="toggleCommentModalLabel{{.Id}}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="toggleCommentModalLabel{{.Id}}">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Confirm toggling comments for {{.Doctor}}'s appointment?</p>
+                <p>Disabling will not allow showing and adding new comments, enabling will allow those. Old comments aren't deleted.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button id="toggle-comments-{{.Id}}" type="button" class="btn btn-danger" data-bs-dismiss="modal">Toggle</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        document.getElementById("toggle-comments-{{.Id}}").onclick = ajaxToggleComments
+        function ajaxToggleComments() {
+            var xhr = new XMLHttpRequest()
+            xhr.open("GET", "/administration/comments/toggle/{{.Id}}")
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status == 200) {
+                    result = JSON.parse(xhr.responseText)
+                    if (result.Ok) {
+                        // show new status
+                        if (result.Commentable) {
+                            document.getElementById("commentToggleErrorModalContent{{.Id}}").innerHTML =
+                                "Comment for {{.Doctor}}'s appointment is now enabled"
+                            // remove all children
+                            document.getElementById("appointment-comments-{{.Id}}").innerHTML = ""
+                            // get comments and show them
+                            getComments("{{.Id}}")
+                            // show add comment form
+                            document.getElementById("comment-form-{{.Id}}").style.display = "block"
+                        } else {
+                            document.getElementById("commentToggleErrorModalContent{{.Id}}").innerHTML =
+                                "Comment for {{.Doctor}}'s appointment is now disabled"
+                            // remove add comment form
+                            document.getElementById("comment-form-{{.Id}}").style.display = "none"
+
+                            // remove all children
+                            document.getElementById("appointment-comments-{{.Id}}").innerHTML = ""
+                            // replace with "disabled comment" text
+                            let p = document.createElement("p")
+                            p.innerHTML = "Comments disabled"
+                            p.id = "disabled-comments-text"
+                            document.getElementById("appointment-comments-{{.Id}}").appendChild(p)
+                        }
+                        document.getElementById("commentToggleError{{.Id}}").click()
+                    } else {
+                        // show error modal
+                        document.getElementById("commentToggleErrorModalContent{{.Id}}").innerHTML =
+                            "An error occurred when trying to toggle comments for {{.Doctor}}'s appointment"
+                        document.getElementById("commentToggleError{{.Id}}").click()
+                    }
+                }
+            }
+            xhr.send()
+        }
+    })()
+</script>
+
+<!-- result + error modal -->
+<button id="commentToggleError{{.Id}}" type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#commentToggleErrorModal{{.Id}}" style="display: none;"></button>
+<div class="modal fade" id="commentToggleErrorModal{{.Id}}" tabindex="-1" aria-labelledby="commentToggleErrorModal{{.Id}}Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="commentToggleError{{.Id}}Label">Error</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="commentToggleErrorModalContent{{.Id}}">
+                result here
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

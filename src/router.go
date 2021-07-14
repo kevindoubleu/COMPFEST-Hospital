@@ -55,6 +55,9 @@ func Start() {
 	http.Handle("/administration/images/delete/",
 		JSONResponse(AdminOnly(GetOnly(http.StripPrefix("/administration/images/delete/",
 		http.HandlerFunc(adminImagesDelete))))))
+	http.Handle("/administration/comments/toggle/",
+		JSONResponse(AdminOnly(GetOnly(http.StripPrefix("/administration/comments/toggle/",
+		http.HandlerFunc(adminToggleComments))))))
 
 	http.Handle("/administration/patients",
 		AdminOnly(GetOnly(http.HandlerFunc(patients))))

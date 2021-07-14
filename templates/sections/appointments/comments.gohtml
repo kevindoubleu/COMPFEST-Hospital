@@ -14,9 +14,9 @@
     <!-- */}} -->
 </div>
 <script>
-    (function () {
+    function getComments(id) {
         var xhr = new XMLHttpRequest()
-        xhr.open("GET", "/appointments/comments/{{.}}")
+        xhr.open("GET", "/appointments/comments/"+id)
         xhr.onreadystatechange = () => {
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status == 200) {
                 result = JSON.parse(xhr.responseText)
@@ -44,27 +44,28 @@
                         d1.appendChild(commentText)
                         d1.appendChild(document.createElement("br"))
 
-                        document.getElementById("appointment-comments-{{.}}").appendChild(d1)
+                        document.getElementById("appointment-comments-"+id).appendChild(d1)
                     }
                 } else if (result.Disabled) {
                     // add "disabled" text
                     let p = document.createElement("p")
                     p.innerHTML = "Comments disabled"
                     p.id = "disabled-comments-text"
-                    document.getElementById("appointment-comments-{{.}}").appendChild(p)
+                    document.getElementById("appointment-comments-"+id).appendChild(p)
                     // remove comment form
-                    document.getElementById("comment-form-{{.}}").remove()
+                    document.getElementById("comment-form-"+id).style.display = "none"
                 } else {
                     // add "no comments" text
                     let p = document.createElement("p")
                     p.innerHTML = "No comments"
                     p.id = "no-comments-text"
-                    document.getElementById("appointment-comments-{{.}}").appendChild(p)
-                    document.getElementById("appointment-comments-{{.}}").appendChild(document.createElement("br"))
+                    document.getElementById("appointment-comments-"+id).appendChild(p)
+                    document.getElementById("appointment-comments-"+id).appendChild(document.createElement("br"))
                 }
             }
         }
         xhr.send()
-    })()
+    }
+    getComments("{{.}}")
 </script>
 {{end}}

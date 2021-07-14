@@ -66,6 +66,7 @@
                         <!-- comments -->
                         {{template "appointment-comments" $v.Appointment.Id}}
                         {{template "appointment-comments-add" $v.Appointment.Id}}
+                        {{template "admin-comments-toggle" $v.Appointment}}
                     </div>
                 </li>
                 {{end}}
