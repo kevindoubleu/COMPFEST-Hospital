@@ -17,6 +17,7 @@ type Appointment struct {
 	Doctor string
 	Description string
 	Capacity int
+	Commentable bool
 }
 
 type Patient struct {
@@ -87,7 +88,8 @@ func initTables(db *sql.DB) {
 			id          SERIAL PRIMARY KEY,
 			doctor      TEXT   NOT NULL,
 			description TEXT   NOT NULL,
-			capacity    INT    NOT NULL
+			capacity    INT    NOT NULL,
+			commentable BOOL   DEFAULT true
 		)
 	`)
 	ErrPanic(err)
@@ -153,11 +155,11 @@ func initRecords(db *sql.DB) {
 
 	// appointments
 	_, err = db.Exec(`
-		INSERT INTO appointments (doctor, description, capacity)
+		INSERT INTO appointments (doctor, description, capacity, commentable)
 		VALUES
-			('Dr. Some Guy', 'I will talk about some covid stuff', 3),
-			('Dr. Pepper', 'some more covid stuff', 5),
-			('Mr. Strange', 'hey im a doctor yknow', 20)
+			('Dr. Some Guy', 'I will talk about some covid stuff', 3, true),
+			('Dr. Pepper', 'some more covid stuff', 5, false),
+			('Mr. Strange', 'hey im a doctor yknow', 20, true)
 	`)
 	ErrPanic(err)
 
@@ -202,12 +204,10 @@ func initRecords(db *sql.DB) {
 		VALUES
 			('aboots', 1, 'cant wait for this appointment!', $1),
 			('budiman', 1, 'test123', $2),
-			('gulamanis', 2, 'is this an online appointment?', $3),
-			('corbusir', 1, 'hey we can turn this into podcast', $4)`,
+			('gulamanis', 1, 'is this an online appointment?', $3)`,
 		time.Now().Add(33 * time.Minute * -1),
 		time.Now().Add(22 * time.Minute * -1),
-		time.Now().Add(11 * time.Minute * -1),
-		time.Now())
+		time.Now().Add(11 * time.Minute * -1))
 	ErrPanic(err)
 }
 
@@ -221,7 +221,7 @@ func testQuery(db *sql.DB) {
 	availableAppointments := make([]Appointment, 0)
 	for rows.Next() {
 		a := Appointment{}
-		err := rows.Scan(&a.Id, &a.Doctor, &a.Description, &a.Capacity)
+		err := rows.Scan(&a.Id, &a.Doctor, &a.Description, &a.Capacity, &a.Commentable)
 		ErrPanic(err)
 		availableAppointments = append(availableAppointments, a)
 	}

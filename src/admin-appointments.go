@@ -50,7 +50,9 @@ func administration(w http.ResponseWriter, r *http.Request) {
 	details := make([]AppointmentDetail, 0)
 
 	// get appointments from db
-	rows, err := db.Query("SELECT * FROM appointments ORDER BY id;")
+	rows, err := db.Query(`
+		SELECT id, doctor, description, capacity
+		FROM appointments ORDER BY id;`)
 	ErrPanic(err)
 	defer rows.Close()
 
@@ -220,4 +222,9 @@ func adminImagesDelete(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("appointment img delete:", err)
 	}
+}
+
+// TOGGLE COMMENTS
+func adminToggleComments(w http.ResponseWriter, r *http.Request) {
+
 }

@@ -93,7 +93,7 @@ july 13
   - uses JSON in both req + resp!
 
 july 14
-- admins can delete comments (per appointment)
+- admins can enable/disable comments (per appointment)
 
 planned features
 - patients can upload a profile picture

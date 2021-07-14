@@ -46,6 +46,14 @@
 
                         document.getElementById("appointment-comments-{{.}}").appendChild(d1)
                     }
+                } else if (result.Disabled) {
+                    // add "disabled" text
+                    let p = document.createElement("p")
+                    p.innerHTML = "Comments disabled"
+                    p.id = "disabled-comments-text"
+                    document.getElementById("appointment-comments-{{.}}").appendChild(p)
+                    // remove comment form
+                    document.getElementById("comment-form-{{.}}").remove()
                 } else {
                     // add "no comments" text
                     let p = document.createElement("p")

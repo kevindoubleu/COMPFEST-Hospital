@@ -46,6 +46,10 @@
 
                         document.getElementById("appointment-comments-{{.}}").appendChild(d1)
                         document.getElementById("add-comment-{{.}}").value = ""
+                    } else if (result.Disabled) {
+                        // show error modal with "disabled" text
+                        document.getElementById("commentAddErrorModalContent{{.}}").innerHTML = "Comments disabled"
+                        document.getElementById("commentAddError{{.}}").click()
                     } else {
                         // show error modal
                         document.getElementById("commentAddErrorModalContent{{.}}").innerHTML =

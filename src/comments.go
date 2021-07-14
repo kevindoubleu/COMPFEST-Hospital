@@ -4,17 +4,44 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 )
+
+func commentEnabled(apId int) bool {
+	row := db.QueryRow(`
+		SELECT commentable FROM appointments WHERE id = $1`,
+		apId)
+	var allowed bool
+	err := row.Scan(&allowed)
+	if err != nil {
+		log.Println("appointments commentable:", err)
+	}
+	
+	return err == nil && allowed
+}
 
 // URL path is appointment_id
 func appointmentComments(w http.ResponseWriter, r *http.Request) {
 	type response struct {
 		Ok bool
 		Comments []Comment
+		Disabled bool
 	}
-	apId := r.URL.Path
 	resp := response{}
+
+	apId, err := strconv.Atoi(r.URL.Path)
+	if err != nil {
+		json.NewEncoder(w).Encode(resp)
+		return
+	}
+
+	// check if comments are enabled for the appointment
+	if !commentEnabled(apId) {
+		resp.Disabled = true
+		json.NewEncoder(w).Encode(resp)
+		return
+	}
 
 	// get comments from db
 	rows, err := db.Query(`
@@ -58,12 +85,20 @@ func addCommentToAppointment(w http.ResponseWriter, r *http.Request) {
 	type response struct {
 		Ok bool
 		Comment
+		Disabled bool
 	}
 	resp := response{}
 
 	c := Comment{}
 	err := json.NewDecoder(r.Body).Decode(&c)
 	if err != nil {
+		json.NewEncoder(w).Encode(resp)
+		return
+	}
+
+	// check if comments are enabled for the appointment
+	if !commentEnabled(c.Appointment_id) {
+		resp.Disabled = true
 		json.NewEncoder(w).Encode(resp)
 		return
 	}
