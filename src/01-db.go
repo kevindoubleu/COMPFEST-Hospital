@@ -143,8 +143,7 @@ func initTables(db *sql.DB) {
 func initRecords(db *sql.DB) {
 	// default admin superuser
 	hash, _ := bcrypt.GenerateFromPassword(
-		// []byte("compfesthospitaladmin"),
-		[]byte("admin"),
+		[]byte("compfesthospitaladmin"),
 		bcrypt.DefaultCost)
 	_, err := db.Exec(`
 		INSERT INTO users (firstname, lastname, age, email, username, password, admin)
